@@ -1,6 +1,6 @@
---DROP VIEW APTTUS_DW.SF_CONGA1_0.FMA_Feature_Daily_Values ;
+DROP VIEW APTTUS_DW.SF_CONGA1_0."FMA_Feature_Daily_Values" ;
 
-CREATE OR REPLACE VIEW APTTUS_DW.SF_CONGA1_0.FMA_Feature_Daily_Values  
+CREATE OR REPLACE VIEW APTTUS_DW.SF_CONGA1_0."FMA_Feature_Daily_Values"  
 COMMENT = 'list parameter values (from list of features in product_analytics_featureparameters) for each day, license, and package.  This is a verticle listing see activity pivot for a different view'
 AS 
 select A.SFFMA__LICENSE__C as LICENSE_ID
