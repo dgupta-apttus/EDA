@@ -6,16 +6,33 @@ create or replace procedure APTTUS_DW.SNAPSHOTS.CREATE_ACCOUNT_C1_SNAP(FLOAT_PAR
     strict
     as
     $$
-    var sql_command = "CREATE TABLE APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + FLOAT_PARAM1 + " as SELECT *, CONVERT_TIMEZONE('UTC',current_timestamp()) AS SNAP_LOAD_AT from APTTUS_DW.SF_CONGA1_0.ACCOUNT"
+    var stmt = snowflake.createStatement({sqlText: "SELECT DATE_PART(epoch_millisecond, current_timestamp()) AS EPOCH_SECS"});
+    var RS = stmt.execute();
+    RS.next();
+    var NEW_EPOCH_SECS = RS.getColumnValue(1);
+    var return_value;
+    return_value = "Failed.";
+
+    var sql_command = "CREATE TABLE APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + FLOAT_PARAM1 + "_" + NEW_EPOCH_SECS + " as SELECT *, CONVERT_TIMEZONE('UTC',current_timestamp()) AS SNAP_LOAD_AT from APTTUS_DW.SF_CONGA1_0.ACCOUNT"
     try {
         snowflake.execute (
             {sqlText: sql_command}
             );
-        return "Succeeded.";   // Return a success/error indicator.
+         return_value = "Succeeded.";   // Return a success/error indicator.
         }
     catch (err)  {
         return "Failed: " + err;   // Return a success/error indicator.
         }
+
+    snowflake.execute({
+    sqlText:"UPDATE APTTUS_DW.SNAPSHOTS.SNAPSHOT_CONTROL \
+   set CURRENT_SNAPSHOT_TABLE_VERSION = '" + NEW_EPOCH_SECS +"'\
+   WHERE OUT_CATALOG = 'APTTUS_DW' \
+     and OUT_SCHEMA = 'SNAPSHOTS' \
+     and OUT_OBJECT_NAME = 'ACCOUNT_C1_SNAP_' \
+     and OUT_OBJECT_TYPE = 'Snap Table'"
+     }); 
+    return return_value;
     $$
     ;
     
@@ -23,7 +40,7 @@ describe procedure APTTUS_DW.SNAPSHOTS.CREATE_ACCOUNT_C1_SNAP(FLOAT);
 --how to call example
 CALL APTTUS_DW.SNAPSHOTS.CREATE_ACCOUNT_C1_SNAP(select Max(_SDC_TABLE_VERSION) from APTTUS_DW.SF_CONGA1_0.ACCOUNT);
 
-create or replace procedure APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(FLOAT_PARAM1 FLOAT)
+create or replace procedure APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(CHAR_PARAM1 VARCHAR)
     returns string
     language javascript
     strict
@@ -31,6 +48,7 @@ create or replace procedure APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(FLOAT_PAR
     $$
     var procname = "UPDATE ACCOUNT C1 SNAP"
     var stepname = "Insert existing"
+    var table_codes = CHAR_PARAM1
     var stmt2 = snowflake.createStatement({sqlText: "SELECT START_AFTER_SYSTEMMODSTAMP FROM APTTUS_DW.SNAPSHOTS.SNAPSHOT_CONTROL \
 WHERE OUT_CATALOG = 'APTTUS_DW' \
 and OUT_SCHEMA = 'SNAPSHOTS' \
@@ -40,12 +58,18 @@ and OUT_OBJECT_TYPE = 'Snap Table'"
     var RS = stmt2.execute();
     RS.next();
     var FROMDATE = RS.getColumnValue(1);
+
+    var stmt4 = snowflake.createStatement({sqlText: "select Max(_SDC_TABLE_VERSION) as SDC_TABLE_V from APTTUS_DW.SF_CONGA1_0.ACCOUNT"});
+    var RS4 = stmt4.execute();
+    RS4.next();
+    var SDC_TABLE_VERSION = RS4.getColumnValue(1);
+
     var return_value;
     return_value = "Failed";
 
     try {
         var stmt = snowflake.createStatement({
-            sqlText: "INSERT INTO APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + FLOAT_PARAM1 + " SELECT *, CONVERT_TIMEZONE('UTC',current_timestamp()) AS SNAP_LOAD_AT from APTTUS_DW.SF_CONGA1_0.ACCOUNT WHERE SYSTEMMODSTAMP > (:1)",       
+            sqlText: "INSERT INTO APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + CHAR_PARAM1 + " SELECT *, CONVERT_TIMEZONE('UTC',current_timestamp()) AS SNAP_LOAD_AT from APTTUS_DW.SF_CONGA1_0.ACCOUNT WHERE SYSTEMMODSTAMP > (:1)",       
             binds: [FROMDATE]
             });
 
@@ -58,20 +82,32 @@ and OUT_OBJECT_TYPE = 'Snap Table'"
         }
     catch (err)  {
         var errorstr = err.message.replace(/\n/g, " ")
-        stepname = "Create Next Snap Iteration" 
-        if (errorstr.includes("does not exist")){
+        if (errorstr.includes("does not exist") || errorstr.includes("does not match column list")){
             try {
+                stepname = "Create Next Snap Iteration"
                 var stmt3 = snowflake.createStatement({
                 sqlText: 'CALL APTTUS_DW.SNAPSHOTS.CREATE_ACCOUNT_C1_SNAP(:1)',
-                binds: [FLOAT_PARAM1]
+                binds: [SDC_TABLE_VERSION]
                 });
     
                 var result3 = stmt3.execute();
-                return_value = "Created New Snap for ACCOUNT_C1 as ACCOUNT_C1_SNAP_" + FLOAT_PARAM1;   // Return a success/error indicator.
+                return_value = "Created New Snap for ACCOUNT_C1 as ACCOUNT_C1_SNAP_" + CHAR_PARAM1;   // Return a success/error indicator.
                 snowflake.execute({
                     sqlText: `insert into APTTUS_DW.SNAPSHOTS.SNAP_ACTIVITY_LOG (procedure_name, step_name) VALUES (?,?)`
                     ,binds: [procname, stepname]
                     });
+
+//update the table name variable when there is a new create
+                var stmt5 = snowflake.createStatement({sqlText: "select CURRENT_SDC_TABLE_VERSION || '_' || CURRENT_SNAPSHOT_TABLE_VERSION as NEW_TAB_V \
+from APTTUS_DW.SNAPSHOTS.SNAPSHOT_CONTROL \
+WHERE OUT_CATALOG = 'APTTUS_DW' \
+and OUT_SCHEMA = 'SNAPSHOTS' \
+and OUT_OBJECT_NAME = 'ACCOUNT_C1_SNAP_'" 
+                });
+                var RS5 = stmt5.execute();
+                RS5.next();
+                table_codes = RS5.getColumnValue(1);
+
                 }
             catch (err) {
                 var errorstr2 = err.message.replace(/\n/g, " ")
@@ -85,17 +121,17 @@ and OUT_OBJECT_TYPE = 'Snap Table'"
             return_value = "Failed: " + errorstr + " Code: " + err.code + " State: " + err.state;
             snowflake.execute({
                 sqlText: `insert into APTTUS_DW.SNAPSHOTS.SNAP_ACTIVITY_LOG VALUES (?,?,?,?,?,?,current_user(),CONVERT_TIMEZONE('UTC',current_timestamp()))`
-                ,binds: [procname, stepname, err.code, err.state, errorstr2, err.stackTraceTxt]
+                ,binds: [procname, stepname, err.code, err.state, errorstr, err.stackTraceTxt]
                 });
         }      
     }
 
     snowflake.execute({
     sqlText:"UPDATE APTTUS_DW.SNAPSHOTS.SNAPSHOT_CONTROL \
-   set START_AFTER_SYSTEMMODSTAMP = (SELECT MAX(SYSTEMMODSTAMP) FROM APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + FLOAT_PARAM1 + ") \
-     , LAST_SDC_EXTRACTED_AT = (SELECT MAX(_SDC_EXTRACTED_AT) FROM APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + FLOAT_PARAM1 + ") \
+   set START_AFTER_SYSTEMMODSTAMP = (SELECT MAX(SYSTEMMODSTAMP) FROM APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + table_codes + ") \
+     , LAST_SDC_EXTRACTED_AT = (SELECT MAX(_SDC_EXTRACTED_AT) FROM APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + table_codes + ") \
      , LAST_SNAPSHOT_START = (CONVERT_TIMEZONE('UTC',current_timestamp())) \
-     , CURRENT_SDC_TABLE_VERSION = (SELECT MAX(_SDC_TABLE_VERSION) FROM APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + FLOAT_PARAM1 + ") \
+     , CURRENT_SDC_TABLE_VERSION = (SELECT MAX(_SDC_TABLE_VERSION) FROM APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + table_codes + ") \
    WHERE OUT_CATALOG = 'APTTUS_DW' \
      and OUT_SCHEMA = 'SNAPSHOTS' \
      and OUT_OBJECT_NAME = 'ACCOUNT_C1_SNAP_' \
@@ -105,16 +141,18 @@ and OUT_OBJECT_TYPE = 'Snap Table'"
     $$
     ;     
       
-DESCRIBE procedure APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(FLOAT);
+DESCRIBE procedure APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(VARCHAR);
 --how to call example
-CALL APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(select Max(_SDC_TABLE_VERSION) from APTTUS_DW.SF_CONGA1_0.ACCOUNT);
+CALL APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(select CURRENT_SDC_TABLE_VERSION || '_' || CURRENT_SNAPSHOT_TABLE_VERSION from APTTUS_DW.SNAPSHOTS.SNAPSHOT_CONTROL WHERE OUT_CATALOG = 'APTTUS_DW' and OUT_SCHEMA = 'SNAPSHOTS' and OUT_OBJECT_NAME = 'ACCOUNT_C1_SNAP_');
 
 
 CREATE OR REPLACE TASK APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP
   WAREHOUSE = APTTUS_ADMIN
   SCHEDULE = 'USING CRON 01 16 * * * UTC' 
-AS CALL APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(select Max(_SDC_TABLE_VERSION) from APTTUS_DW.SF_CONGA1_0.ACCOUNT);
+AS CALL APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(select CURRENT_SDC_TABLE_VERSION || '_' || CURRENT_SNAPSHOT_TABLE_VERSION from APTTUS_DW.SNAPSHOTS.SNAPSHOT_CONTROL WHERE OUT_CATALOG = 'APTTUS_DW' and OUT_SCHEMA = 'SNAPSHOTS' and OUT_OBJECT_NAME = 'ACCOUNT_C1_SNAP_');
 
 DESCRIBE task APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP;
 alter task APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP suspend; --resume
 alter task APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP resume;
+
+DROP procedure APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(FLOAT);

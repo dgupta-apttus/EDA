@@ -1,12 +1,12 @@
 show procedures IN SCHEMA SNAPSHOTS;
 
-create or replace procedure APTTUS_DW.SNAPSHOTS.CREATE_FMA_VALUES_SNAP(FLOAT_PARAM1 FLOAT)
+create or replace procedure APTTUS_DW.SNAPSHOTS.CREATE_ACCOUNT_C1_SNAP(FLOAT_PARAM1 FLOAT)
     returns string
     language javascript
     strict
     as
     $$
-    var sql_command = "CREATE TABLE APTTUS_DW.SNAPSHOTS.FMA_VALUES_SNAP_" + FLOAT_PARAM1 + " as SELECT *, CONVERT_TIMEZONE('UTC',current_timestamp()) AS SNAP_LOAD_AT from APTTUS_DW.SF_CONGA1_0.SFFMA__FEATUREPARAMETERINTEGER__C"
+    var sql_command = "CREATE TABLE APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + FLOAT_PARAM1 + " as SELECT *, CONVERT_TIMEZONE('UTC',current_timestamp()) AS SNAP_LOAD_AT from APTTUS_DW.SF_CONGA1_0.ACCOUNT"
     try {
         snowflake.execute (
             {sqlText: sql_command}
@@ -19,22 +19,22 @@ create or replace procedure APTTUS_DW.SNAPSHOTS.CREATE_FMA_VALUES_SNAP(FLOAT_PAR
     $$
     ;
     
-describe procedure APTTUS_DW.SNAPSHOTS.CREATE_FMA_VALUES_SNAP(FLOAT);   
+describe procedure APTTUS_DW.SNAPSHOTS.CREATE_ACCOUNT_C1_SNAP(FLOAT);   
 --how to call example
-CALL APTTUS_DW.SNAPSHOTS.CREATE_FMA_VALUES_SNAP(select Max(_SDC_TABLE_VERSION) from APTTUS_DW.SF_CONGA1_0.SFFMA__FEATUREPARAMETERINTEGER__C);
+CALL APTTUS_DW.SNAPSHOTS.CREATE_ACCOUNT_C1_SNAP(select Max(_SDC_TABLE_VERSION) from APTTUS_DW.SF_CONGA1_0.ACCOUNT);
 
-create or replace procedure APTTUS_DW.SNAPSHOTS.UPDATE_FMA_VALUES_SNAP(FLOAT_PARAM1 FLOAT)
+create or replace procedure APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(FLOAT_PARAM1 FLOAT)
     returns string
     language javascript
     strict
     as
     $$
-    var procname = "UPDATE FMA VALUES SNAP"
+    var procname = "UPDATE ACCOUNT C1 SNAP"
     var stepname = "Insert existing"
     var stmt2 = snowflake.createStatement({sqlText: "SELECT START_AFTER_SYSTEMMODSTAMP FROM APTTUS_DW.SNAPSHOTS.SNAPSHOT_CONTROL \
 WHERE OUT_CATALOG = 'APTTUS_DW' \
 and OUT_SCHEMA = 'SNAPSHOTS' \
-and OUT_OBJECT_NAME = 'FMA_VALUES_SNAP_' \
+and OUT_OBJECT_NAME = 'ACCOUNT_C1_SNAP_' \
 and OUT_OBJECT_TYPE = 'Snap Table'" 
         });
     var RS = stmt2.execute();
@@ -45,7 +45,7 @@ and OUT_OBJECT_TYPE = 'Snap Table'"
 
     try {
         var stmt = snowflake.createStatement({
-            sqlText: "INSERT INTO APTTUS_DW.SNAPSHOTS.FMA_VALUES_SNAP_" + FLOAT_PARAM1 + " SELECT *, CONVERT_TIMEZONE('UTC',current_timestamp()) AS SNAP_LOAD_AT from APTTUS_DW.SF_CONGA1_0.SFFMA__FEATUREPARAMETERINTEGER__C WHERE SYSTEMMODSTAMP > (:1)",       
+            sqlText: "INSERT INTO APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + FLOAT_PARAM1 + " SELECT *, CONVERT_TIMEZONE('UTC',current_timestamp()) AS SNAP_LOAD_AT from APTTUS_DW.SF_CONGA1_0.ACCOUNT WHERE SYSTEMMODSTAMP > (:1)",       
             binds: [FROMDATE]
             });
 
@@ -60,14 +60,14 @@ and OUT_OBJECT_TYPE = 'Snap Table'"
         var errorstr = err.message.replace(/\n/g, " ")
         if (errorstr.includes("does not exist")){
             try {
-                stepname = "Create Next Snap Iteration" 
+                stepname = "Create Next Snap Iteration"
                 var stmt3 = snowflake.createStatement({
-                sqlText: 'CALL APTTUS_DW.SNAPSHOTS.CREATE_FMA_VALUES_SNAP(:1)',
+                sqlText: 'CALL APTTUS_DW.SNAPSHOTS.CREATE_ACCOUNT_C1_SNAP(:1)',
                 binds: [FLOAT_PARAM1]
                 });
     
                 var result3 = stmt3.execute();
-                return_value = "Created New Snap for FMA_VALUES as FMA_VALUES_SNAP_" + FLOAT_PARAM1;   // Return a success/error indicator.
+                return_value = "Created New Snap for ACCOUNT_C1 as ACCOUNT_C1_SNAP_" + FLOAT_PARAM1;   // Return a success/error indicator.
                 snowflake.execute({
                     sqlText: `insert into APTTUS_DW.SNAPSHOTS.SNAP_ACTIVITY_LOG (procedure_name, step_name) VALUES (?,?)`
                     ,binds: [procname, stepname]
@@ -92,29 +92,29 @@ and OUT_OBJECT_TYPE = 'Snap Table'"
 
     snowflake.execute({
     sqlText:"UPDATE APTTUS_DW.SNAPSHOTS.SNAPSHOT_CONTROL \
-   set START_AFTER_SYSTEMMODSTAMP = (SELECT MAX(SYSTEMMODSTAMP) FROM APTTUS_DW.SNAPSHOTS.FMA_VALUES_SNAP_" + FLOAT_PARAM1 + ") \
-     , LAST_SDC_EXTRACTED_AT = (SELECT MAX(_SDC_EXTRACTED_AT) FROM APTTUS_DW.SNAPSHOTS.FMA_VALUES_SNAP_" + FLOAT_PARAM1 + ") \
+   set START_AFTER_SYSTEMMODSTAMP = (SELECT MAX(SYSTEMMODSTAMP) FROM APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + FLOAT_PARAM1 + ") \
+     , LAST_SDC_EXTRACTED_AT = (SELECT MAX(_SDC_EXTRACTED_AT) FROM APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + FLOAT_PARAM1 + ") \
      , LAST_SNAPSHOT_START = (CONVERT_TIMEZONE('UTC',current_timestamp())) \
-     , CURRENT_SDC_TABLE_VERSION = (SELECT MAX(_SDC_TABLE_VERSION) FROM APTTUS_DW.SNAPSHOTS.FMA_VALUES_SNAP_" + FLOAT_PARAM1 + ") \
+     , CURRENT_SDC_TABLE_VERSION = (SELECT MAX(_SDC_TABLE_VERSION) FROM APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_" + FLOAT_PARAM1 + ") \
    WHERE OUT_CATALOG = 'APTTUS_DW' \
      and OUT_SCHEMA = 'SNAPSHOTS' \
-     and OUT_OBJECT_NAME = 'FMA_VALUES_SNAP_' \
+     and OUT_OBJECT_NAME = 'ACCOUNT_C1_SNAP_' \
      and OUT_OBJECT_TYPE = 'Snap Table'"
      }); 
     return return_value;
     $$
     ;     
       
-DESCRIBE procedure APTTUS_DW.SNAPSHOTS.UPDATE_FMA_VALUES_SNAP(FLOAT);
+DESCRIBE procedure APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(FLOAT);
 --how to call example
-CALL APTTUS_DW.SNAPSHOTS.UPDATE_FMA_VALUES_SNAP(select Max(_SDC_TABLE_VERSION) from APTTUS_DW.SF_CONGA1_0.SFFMA__FEATUREPARAMETERINTEGER__C);
+CALL APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(select Max(_SDC_TABLE_VERSION) from APTTUS_DW.SF_CONGA1_0.ACCOUNT);
 
 
-CREATE OR REPLACE TASK APTTUS_DW.SNAPSHOTS.FMA_VALUES_SNAP
+CREATE OR REPLACE TASK APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP
   WAREHOUSE = APTTUS_ADMIN
   SCHEDULE = 'USING CRON 01 16 * * * UTC' 
-AS CALL APTTUS_DW.SNAPSHOTS.UPDATE_FMA_VALUES_SNAP(select Max(_SDC_TABLE_VERSION) from APTTUS_DW.SF_CONGA1_0.SFFMA__FEATUREPARAMETERINTEGER__C);
+AS CALL APTTUS_DW.SNAPSHOTS.UPDATE_ACCOUNT_C1_SNAP(select Max(_SDC_TABLE_VERSION) from APTTUS_DW.SF_CONGA1_0.ACCOUNT);
 
-DESCRIBE task APTTUS_DW.SNAPSHOTS.FMA_VALUES_SNAP;
-alter task APTTUS_DW.SNAPSHOTS.FMA_VALUES_SNAP suspend; --resume
-alter task APTTUS_DW.SNAPSHOTS.FMA_VALUES_SNAP resume;
+DESCRIBE task APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP;
+alter task APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP suspend; --resume
+alter task APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP resume;

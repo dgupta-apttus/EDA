@@ -57,10 +57,10 @@ and OUT_OBJECT_TYPE = 'Snap Table'"
             });
         }
     catch (err)  {
-        var errorstr = err.message.replace(/\n/g, " ")
-        stepname = "Create Next Snap Iteration" 
+        var errorstr = err.message.replace(/\n/g, " ") 
         if (errorstr.includes("does not exist")){
             try {
+                stepname = "Create Next Snap Iteration"
                 var stmt3 = snowflake.createStatement({
                 sqlText: 'CALL APTTUS_DW.SNAPSHOTS.CREATE_OPPORTUNITY_C1_SNAP(:1)',
                 binds: [FLOAT_PARAM1]
@@ -85,7 +85,7 @@ and OUT_OBJECT_TYPE = 'Snap Table'"
             return_value = "Failed: " + errorstr + " Code: " + err.code + " State: " + err.state;
             snowflake.execute({
                 sqlText: `insert into APTTUS_DW.SNAPSHOTS.SNAP_ACTIVITY_LOG VALUES (?,?,?,?,?,?,current_user(),CONVERT_TIMEZONE('UTC',current_timestamp()))`
-                ,binds: [procname, stepname, err.code, err.state, errorstr2, err.stackTraceTxt]
+                ,binds: [procname, stepname, err.code, err.state, errorstr, err.stackTraceTxt]
                 });
         }      
     }
