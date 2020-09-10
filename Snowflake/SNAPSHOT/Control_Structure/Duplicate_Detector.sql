@@ -1,0 +1,65 @@
+SELECT count(*)
+     , ID
+     , _SDC_EXTRACTED_AT 
+FROM APTTUS_DW.SNAPSHOTS.ASSET_C1_SNAP_1595529536375
+group by ID
+       , _SDC_EXTRACTED_AT 
+having count(*) > 1
+;
+
+-- FMA VALUES
+SELECT count(*)
+      , SFFMA__LICENSE__C
+      , SFFMA__FEATUREPARAMETER__C
+      , _SDC_EXTRACTED_AT
+FROM APTTUS_DW.SNAPSHOTS.FMA_VALUES_HISTORY
+group by SFFMA__LICENSE__C
+      , SFFMA__FEATUREPARAMETER__C
+      , _SDC_EXTRACTED_AT
+having count(*) > 1      
+;
+
+
+SELECT COUNT(*) 
+     , ACCOUNTID_18__C
+     , _SDC_EXTRACTED_AT     
+FROM APTTUS_DW.SNAPSHOTS.ACCOUNT_C1_SNAP_1596811849331
+group by ACCOUNTID_18__C
+     , _SDC_EXTRACTED_AT 
+having count(*) > 1     
+;
+
+-- LMA LICENSE C1
+SELECT count(*)
+     , ID
+     , _SDC_EXTRACTED_AT 
+FROM APTTUS_DW.SNAPSHOTS.LMA_LICENSE_C1_HISTORY
+group by ID
+       , _SDC_EXTRACTED_AT 
+having count(*) > 1
+;
+
+
+SELECT count(*)
+     , ID
+     , _SDC_EXTRACTED_AT 
+FROM APTTUS_DW.SNAPSHOTS.OPPORTUNITY_C1_SNAP_1596552099072  --1DUPS
+group by ID
+       , _SDC_EXTRACTED_AT 
+having count(*) > 1
+;
+
+SELECT count(*)
+     , ID
+     , _SDC_EXTRACTED_AT 
+FROM APTTUS_DW.SNAPSHOTS.OPPORTUNITY_C1_SNAP_1DUPS
+group by ID
+       , _SDC_EXTRACTED_AT 
+having count(*) > 1
+order by _SDC_EXTRACTED_AT desc
+;
+
+select ID, _SDC_EXTRACTED_AT, sysmod*
+FROM APTTUS_DW.SNAPSHOTS.OPPORTUNITY_C1_SNAP_1DUPS
+where ID = '0061T00000os8aYQAQ'
+
