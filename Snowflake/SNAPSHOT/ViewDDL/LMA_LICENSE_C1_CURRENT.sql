@@ -1,6 +1,6 @@
---DROP VIEW APTTUS_DW.SNAPSHOTS.FMA_VALUES_CURRENT ;
+            
 
-CREATE OR REPLACE VIEW APTTUS_DW.SNAPSHOTS.LMA_LICENSE_C1_CURRENT  
+CREATE OR REPLACE VIEW LMA_LICENSE_C1_CURRENT  
 COMMENT = 'get the most current record for each license ID from the history object'
 AS 
 WITH the_unique_current AS (
@@ -14,6 +14,4 @@ WITH the_unique_current AS (
 	FROM            APTTUS_DW.SNAPSHOTS.LMA_LICENSE_C1_HISTORY A
 	INNER JOIN      the_unique_current B 
 	            ON  A.ID = B.ID 
-	            AND A._SDC_EXTRACTED_AT = B.LAST_EXTRACTED_AT
-;	            
-
+	            AND A._SDC_EXTRACTED_AT = B.LAST_EXTRACTED_AT;
