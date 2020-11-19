@@ -1,0 +1,36 @@
+--DROP TABLE APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE;
+CREATE TABLE APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE
+AS
+SELECT PACKAGE_NAME
+        , CASE 
+             WHEN UPPER(PACKAGE_NAME) IN ('CONGA COMPOSER','SALESFORCE CPQ: CONGA QUOTES','CONGA INVOICE GENERATION')
+               THEN 'Conga Composer'
+             WHEN UPPER(PACKAGE_NAME) = 'ACTIONGRID'  
+               THEN 'Conga Grid'
+             WHEN UPPER(PACKAGE_NAME) = 'CONGA COURIER'
+               THEN 'Conga Courier'
+             WHEN UPPER(PACKAGE_NAME) = 'CONGA SIGN'
+               THEN 'Conga Sign'
+             WHEN UPPER(PACKAGE_NAME) = 'CONGA CONTRACTS'
+               THEN 'Conga Contracts for Salesforce' 
+             WHEN UPPER(PACKAGE_NAME) = 'PROCESSCOMPOSER'
+               THEN 'Conga Orchestrate'
+             WHEN UPPER(PACKAGE_NAME) IS NULL
+               THEN 'Empty Value'              
+             WHEN UPPER(PACKAGE_NAME) IN ('CONGA SL BASIC','MIX','VEO PROCESSCOMPOSER INTEGRATION PACKAGE',
+                        'CONGA MAIL MERGE ON DEMAND','PULSE','ORION CONNECT PROCESS LIBRARY',
+                        'ORCHESTRATE RELATED LIST VIEWER','HARMONY FOR ORION','HARMONY FOR ORION (WM)'
+                                  )     
+               THEN 'Package Not Tracked'
+             WHEN PACKAGE_NAME IS NULL  
+               THEN 'NULL VALUE'
+           ELSE 'NEW PACKAGE NAME -- ADD ASSOCIATION'   
+          END AS PRODUCT_LINE
+     --, COUNT(*)
+     --, MAX(INSTALL_DATE)
+FROM APTTUS_DW.PRODUCT.BEST_SORTED_LICENSES_HISTORY_RSH
+GROUP BY PACKAGE_NAME, PRODUCT_LINE
+--ORDER BY 3 DESC
+;
+
+alter table APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE alter PRODUCT_LINE set data type varchar(1000);
