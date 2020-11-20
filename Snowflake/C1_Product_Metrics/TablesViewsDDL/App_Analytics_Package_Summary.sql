@@ -72,7 +72,7 @@ WITH unionit AS (
                 , NUM_VIEWS
                 , (NUM_READS + NUM_ViEWS) AS ACCESS_ACTIVITY
                 , (NUM_CREATES + NUM_UPDATES + NUM_DELETES) AS MANIPULATION_ACTIVITY
-                , (NUM_READS + NUM_ViEWS + NUM_CREATES + NUM_UPDATES + NUM_DELETES) AS MONTHLY_ACTIVITY
+                , (NUM_READS + NUM_VIEWS + NUM_CREATES + NUM_UPDATES + NUM_DELETES) AS MONTHLY_ACTIVITY
         FROM                                  totalit A
         LEFT OUTER JOIN                       APTTUS_DW.SF_PRODUCTION."Dates" D
                             ON  A.REPORT_YEAR = D."Calendar_Year"
