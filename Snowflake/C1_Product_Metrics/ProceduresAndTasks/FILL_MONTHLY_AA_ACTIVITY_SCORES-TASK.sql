@@ -184,11 +184,15 @@ WITH CONTROL_LAST AS (
              , COALESCE(A.MONTHLY_ACTIVITY, 0) AS ACT
              , COALESCE(B.PRIOR3_ACTIVITY, 0) AS PRIOR3_ACTIVITY
              , CASE WHEN B.PRIOR3_ACTIVITY > 0
-                 THEN COALESCE((A.MONTHLY_ACTIVITY-B.PRIOR3_ACTIVITY)/B.PRIOR3_ACTIVITY, 0)
+                 THEN COALESCE((ACT-B.PRIOR3_ACTIVITY)/B.PRIOR3_ACTIVITY, 0)
+                    WHEN ACT > 0
+                 THEN 1   
                 ELSE 0  
                END AS ACTIVITY_P3_INTERVAL
              , CASE WHEN B.PRIOR3_ACTIVITY > 0
                  THEN COALESCE(A.MONTHLY_ACTIVITY/B.PRIOR3_ACTIVITY, 0)
+                    WHEN A.MONTHLY_ACTIVITY > 0
+                 THEN 1   
                 ELSE 0  
                END AS ACTIVITY_P3_INTERVAL2               
              , CASE
@@ -260,10 +264,14 @@ WITH CONTROL_LAST AS (
              , COALESCE(B.PRIOR3_USERS, 0) AS PRIOR3_USERS
              , CASE WHEN B.PRIOR3_USERS > 0
                  THEN COALESCE((UUSR-B.PRIOR3_USERS)/B.PRIOR3_USERS, 0)
+                    WHEN UUSR > 0
+                 THEN 1   
                 ELSE 0  
                END AS USER_P3_INTERVAL
              , CASE WHEN B.PRIOR3_USERS > 0
                  THEN COALESCE(UUSR/B.PRIOR3_USERS, 0)
+                    WHEN UUSR > 0
+                 THEN 1   
                 ELSE 0  
                END AS USER_P3_INTERVAL2
              , CASE
@@ -354,7 +362,7 @@ WITH CONTROL_LAST AS (
                          ON  L.PACKAGE_ID = P12.PACKAGE_ID
                          AND L.MANAGED_PACKAGE_NAMESPACE = P12.MANAGED_PACKAGE_NAMESPACE
                          AND L.ORGANIZATION_ID = P12.ORGANIZATION_ID                        
-        WHERE L.LAST_ACTIVITY_MONTH >= (SELECT LAST_ACT_LIMIT FROM SET_DATE_RANGE)                                                              
+        WHERE L.LAST_ACTIVITY_MONTH >= (SELECT LAST_ACT_LIMIT FROM SET_DATE_RANGE)                                                           
 )
         SELECT CRM
              , ORGANIZATION_ID  

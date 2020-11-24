@@ -1,3 +1,4 @@
+
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT."Monthly_Score_AppAnalytics_Org"
 COMMENT = 'Combine Activity Scores with License for data from App Analytics'
 AS  
@@ -39,7 +40,7 @@ AS
                 , A.USERS_RANGE_SCORE
                 , A.TOTAL_MONTHS_OF_ACTIVITY
 -- license info
-                , C.ACTIVE_LICENSE_COUNT AS "Active License Count"
+                , COALESCE(C.ACTIVE_LICENSE_COUNT, 0) AS "Active License Count"
                 , C.ACCOUNT_ID AS "Account ID"
                 , C.ACCOUNT_NAME AS "Account Name on LMA"                
                 , C.PRIMARY_LICENSE_ID AS "License ID"   
@@ -48,31 +49,42 @@ AS
                 , C.ACTIVE_SEATS AS "Seats Active"
                 , C.ACTIVE_USED AS "Used Active Seats"   
                 , CASE
-                    WHEN C.ACTIVE_SEAT_TYPE = 'Site'
-                      THEN NULL
-                    WHEN C.ACTIVE_SEAT_TYPE IS NULL
-                      THEN NULL  
                     WHEN C.ACTIVE_SEAT_TYPE = 'Seats'
                      AND C.ACTIVE_SEATS > 0
-                      THEN ((C.ACTIVE_USED/C.ACTIVE_SEATS)*100)::INTEGER
+                      THEN C.ACTIVE_USED/C.ACTIVE_SEATS
                    ELSE 0
-                  END AS "Assigned Ratio"                 
+                  END AS LIC_ASSIGNED_RAW
+                , LEAST(1, LIC_ASSIGNED_RAW) AS LIC_ASSIGNED_UI                          
+                , ROUND(LIC_ASSIGNED_RAW*100) AS "Assigned Ratio"                 
                 , CASE
                     WHEN C.ACTIVE_SEAT_TYPE = 'Seats'  
                       AND C.ACTIVE_USED > 0
-                        THEN ((COALESCE(A.UNIQUE_USERS, 0)/C.ACTIVE_USED)*100)::INTEGER
-                   ELSE NULL
-                  END AS "Usage Ratio" 
-                , CASE
-                    WHEN C.ACTIVE_SEAT_TYPE <> 'Seats'
-                      THEN NULL
-                    WHEN C.ACTIVE_SEAT_TYPE IS NULL
-                      THEN NULL  
-                    WHEN  C.ACTIVE_SEATS > 0
-                     AND C.CRM_SOURCE = 'Conga1.0'
-                      THEN ((COALESCE(A.UNIQUE_USERS, 0)/C.ACTIVE_SEATS)*100)::INTEGER
+                        THEN A.UNIQUE_USERS/C.ACTIVE_USED
                    ELSE 0
-                  END AS "Usage/Purchased Ratio"                              
+                  END AS LIC_USAGE_RAW
+                , LEAST(1, LIC_USAGE_RAW) AS LIC_USAGE_UI
+                , ROUND(LIC_USAGE_RAW*100) as "Usage Ratio"        
+                , CASE 
+                    WHEN C.ACTIVE_SEAT_TYPE = 'Seats'   
+                       AND C.ACTIVE_USED < A.UNIQUE_USERS  
+                      THEN 1::BOOLEAN
+                   ELSE 0::BOOLEAN
+                  END AS USAGE_EXCEEDS_SEATS    
+                , CASE 
+                    WHEN C.ACTIVE_SEAT_TYPE = 'Seats' 
+                      AND C.ACTIVE_SEATS > 0
+                        THEN A.UNIQUE_USERS/C.ACTIVE_SEATS
+                   ELSE 0
+                  END AS LIC_USEPUR_RAW
+                , LEAST(1, LIC_USEPUR_RAW) AS LIC_USEPUR_UI
+                , ROUND(LIC_USEPUR_RAW*100) AS "Usage/Purchased Ratio"               
+                , DATEDIFF(month, A.LAST_ACTIVITY_MONTH, A.REPORT_DATE) AS "Months Since Last User" 
+                , (10 - "Months Since Last User")/10 as LAST_USER_TIME_UI
+                , CASE
+                    WHEN C.ACTIVE_SEAT_TYPE = 'Seats'
+                      THEN ROUND(((LIC_USAGE_UI * .35) + (A.ADOPTION_ACTIVITY_UI * .4) + (LIC_ASSIGNED_UI * .25)) * 100, 2)   
+                   ELSE ROUND(((A.ADOPTION_ACTIVITY_UI * .4) + (A.ADOPTION_USER_UI * .35) + (LAST_USER_TIME_UI * .25)) * 100, 2)
+                  END AS ADOPTION_V1       
         FROM                  	APTTUS_DW.PRODUCT.MONTHLY_AA_ACTIVITY_SCORES A 
         LEFT OUTER JOIN         APTTUS_DW.PRODUCT."Master_Package_List" B
                          ON  A.PACKAGE_ID = B.LMA_PACKAGE_ID
@@ -82,5 +94,20 @@ AS
                          AND  A.REPORT_DATE = C.REPORTING_DATE                                
 ;
 
+--testing
+with get_p as (
+select distinct LMA_PACKAGE_ID, PACKAGE_ID, CRM
+FROM APTTUS_DW.PRODUCT."Monthly_Score_AppAnalytics_Org"
+)
+select distinct PACKAGE_ID, CRM_SOURCE 
+from APTTUS_DW.PRODUCT.LMA_LIC_PACKAGE_MONTHLY
+where PACKAGE_ID in (select PACKAGE_ID from get_p) 
+;
 
-
+select count(*) 
+      , REPORT_DATE
+      , CRM
+FROM APTTUS_DW.PRODUCT."Monthly_Score_AppAnalytics_Org"
+group by REPORT_DATE
+      , CRM
+;

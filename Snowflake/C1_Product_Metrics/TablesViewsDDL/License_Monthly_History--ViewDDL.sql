@@ -8,7 +8,7 @@ WITH A1_MAU as (
              , "Package ID" as LMA_PACKAGE_ID
              , "DATE" as ACTIVITY_MONTH_DATE
              , count(distinct "User ID") AS MONTHLY_UNIQUE_USERS   
-             , (select MAX(PACKAGE_ID) FROM APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE_C2 WHERE LMA_PACKAGE_ID = A."Package ID"
+             , (select MAX(PACKAGEID) FROM APTTUS_DW.PRODUCT."Master_Package_List" WHERE LMA_PACKAGE_ID = A."Package ID"
                ) AS PACKAGE_ID -- PACKAGE_ID_AA is the one used for App Analytics          
         FROM APTTUS_DW.SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY A
         GROUP BY "Subscriber Org ID"

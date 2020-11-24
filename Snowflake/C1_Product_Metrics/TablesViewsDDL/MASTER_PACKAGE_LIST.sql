@@ -26,8 +26,8 @@ union
         FROM                get_packages_both A
         LEFT OUTER JOIN     APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_FAMILY B
                          ON A.ID = B.PACKAGEID    
-        LEFT OUTER JOIN     APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE C
-                         ON A.PACKAGE_NAME = C.PACKAGE_NAME                       
+        LEFT OUTER JOIN     APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE_TWO C
+                         ON A.ID = C.PACKAGE_ID                       
 ;
 
 -- test unique 2 ways

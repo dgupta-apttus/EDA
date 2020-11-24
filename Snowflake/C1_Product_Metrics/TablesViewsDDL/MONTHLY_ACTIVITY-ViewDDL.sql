@@ -80,11 +80,11 @@ WITH union_3_sources as (
                 , PERCENT_SERVICE_EVENTS
                 , CASE
                     WHEN UPPER(PACKAGE_NAMESPACE) in ('APXTCONGA4','APXTCFQ','CSFB')
-                      THEN (SELECT MAX(PACKAGE_ID) FROM APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE_C2 WHERE MANAGED_PACKAGE_NAMESPACE = UPPER(A.PACKAGE_NAMESPACE))                  
+                      THEN (SELECT MAX(PACKAGE_ID) FROM APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE_TWO WHERE MANAGED_PACKAGE_NAMESPACE = UPPER(A.PACKAGE_NAMESPACE))                  
                     WHEN PRODUCT_LINE NOT IN ('Conga Composer', 'Conga Contracts', 'Conga Collaborate')
-                      THEN (SELECT MAX(PACKAGE_ID) FROM APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE_C2 WHERE PRODUCT_LINE = A.PRODUCT_LINE) 
+                      THEN (SELECT MAX(PACKAGE_ID) FROM APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE_TWO WHERE PRODUCT_LINE = A.PRODUCT_LINE) 
                    ELSE 'NO PACKAGE: ' || PRODUCT_LINE
-                  END AS PACKAGE_ID    
+                  END AS PACKAGE_ID                        
                 , 'Conga1.0' as CRM_SOURCE                                  
         FROM union_3_sources A              
 ;
