@@ -3,6 +3,7 @@ CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT."Monthly_Score_Pipeline_Org"
 COMMENT = 'Combine Activity Scores with License for data from App Analytics'
 AS 
         SELECT    'Conga1.0' AS CRM
+                , 'Pipeline' AS DATA_SOURCE 
                 , A.ORG_SOURCE
                 , A.SOURCE_ORG_ID AS ORGANIZATION_ID               
                 , A.REPORT_YEAR
@@ -50,15 +51,15 @@ AS
                 , C.IS_SANDBOX AS "Status - Sandbox"
                 , C.STATUS AS "Status - License"
                 , C.ORG_STATUS AS "Status - Org"    
+                , C.ACTIVE_SEATS AS "Seats Active"
+                , C.ACTIVE_USED AS "Used Active Seats" 
                 , C.NONPROD_SEATS AS "Seats Non-Prod"
                 , C.SANDBOX_SEATS AS "Seats Sandbox"                   
                 , C.EXPIRATION_DATE AS "Expiration Date"
                 , C.EXPIRATION_DATE_STRING AS "Expiration Text"
                 , TO_DATE(C.INSTALL_DATE) AS "Install Date"
                 , C.INSTALL_DATE_STRING AS "Install Text"                
-                , C.UNINSTALL_DATE AS "Uninstall Date"                        
-                , C.ACTIVE_SEATS AS "Seats Active"
-                , C.ACTIVE_USED AS "Used Active Seats"   
+                , C.UNINSTALL_DATE AS "Uninstall Date"                          
                 , CASE
                     WHEN C.ACTIVE_SEAT_TYPE = 'Seats'
                      AND C.ACTIVE_SEATS > 0
