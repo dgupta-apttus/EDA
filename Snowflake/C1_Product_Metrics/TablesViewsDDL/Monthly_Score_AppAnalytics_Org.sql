@@ -1,6 +1,7 @@
-
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT."Monthly_Score_AppAnalytics_Org"
-COMMENT = 'Combine Activity Scores with License for data from App Analytics'
+COMMENT = 'Combine Activity Scores with License for data from App Analytics
+-- 2020/12/16  replace OLD> Master_Package_List with NEW> MASTER_PRODUCT_PACKAGE_MAPPING for product line lookups -- gdw
+'
 AS  
         SELECT    A.CRM
                 , 'AppAnalytics' AS DATA_SOURCE  
@@ -11,12 +12,12 @@ AS
                 , A.REPORT_DATE
                 , A.LAST_ACTIVITY_MONTH
                 , Coalesce(B.LMA_PACKAGE_ID, A.PACKAGE_ID) AS LMA_PACKAGE_ID
-                , B.PACKAGEID AS PACKAGE_ID 
+                , B.PACKAGE_ID AS PACKAGE_ID 
                 , B.PACKAGE_NAME
                 , B.PRODUCT
-                , B.PRODUCTFAMILY
-                , B.PRODUCTPILLAR   
-                , B.PRODUCT_LINE_C1
+                , B.PRODUCT_LINE
+                , B.PRODUCT_FAMILY  
+                , B.PRODUCT AS PRODUCT_LINE_C1
                 , A.MANAGED_PACKAGE_NAMESPACE
                 , A.ACTIVITY_COUNT
                 , A.ACTIVITY_P3_INTERVAL
@@ -99,11 +100,11 @@ AS
                   END AS ADOPTION_V1     
                 , 0 AS "Service Events Percentage"                    
         FROM                  	APTTUS_DW.PRODUCT.MONTHLY_AA_ACTIVITY_SCORES A 
-        LEFT OUTER JOIN         APTTUS_DW.PRODUCT."Master_Package_List" B
+        LEFT OUTER JOIN         APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_PACKAGE_MAPPING B
                          ON  A.PACKAGE_ID = B.LMA_PACKAGE_ID
         LEFT OUTER JOIN         APTTUS_DW.PRODUCT.LMA_LIC_PACKAGE_MONTHLY C
                          ON   A.ORGANIZATION_ID = C.CUSTOMER_ORG_15 
-                         AND  B.PACKAGEID = C.PACKAGE_ID
+                         AND  B.PACKAGE_ID = C.PACKAGE_ID
                          AND  A.REPORT_DATE = C.REPORTING_DATE                                
 ;
 
@@ -123,4 +124,5 @@ select count(*)
 FROM APTTUS_DW.PRODUCT."Monthly_Score_AppAnalytics_Org"
 group by REPORT_DATE
       , CRM
+order by 2 desc, 3 
 ;

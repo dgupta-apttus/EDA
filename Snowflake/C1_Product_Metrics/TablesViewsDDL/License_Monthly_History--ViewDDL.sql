@@ -1,5 +1,7 @@
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT."License_Monthly_History"
-COMMENT = 'Month by month veiw of license and user counts'
+COMMENT = 'Month by month veiw of license and user counts
+-- 2020/12/16 switching old> Master_Package_List for NEW> MASTER_PRODUCT_PACKAGE_MAPPING as Package_id lookup -- gdw 
+'
 AS  
 WITH A1_MAU as (
         select 
@@ -108,7 +110,46 @@ WITH A1_MAU as (
                           ON  UPPER(A.CRM_SOURCE) = UPPER(C.SOURCE)
                           AND A.ACCOUNT_ID = C.ACCOUNTID_18__C                          
 ;        
-     
+
+select count(*) from  APTTUS_DW.PRODUCT."License_Monthly_History";
+/*
+with temp as (
+        select 
+              'Apttus1.0' as CRM_SOURCE
+             , "Subscriber Org ID" AS CUSTOMER_ORG
+             , "Package ID" as LMA_PACKAGE_ID
+             , "DATE" as ACTIVITY_MONTH_DATE
+             , count(distinct "User ID") AS MONTHLY_UNIQUE_USERS   
+             , (select MAX(PACKAGE_ID) FROM APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_PACKAGE_MAPPING WHERE LMA_PACKAGE_ID = A."Package ID"
+               ) AS PACKAGE_ID -- PACKAGE_ID_AA is the one used for App Analytics          
+        FROM APTTUS_DW.SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY A
+        GROUP BY "Subscriber Org ID"
+                , "Package ID" 
+                , "DATE"
+)
+select * from temp
+order by 2
+
+;
+
+with temp as (
+        select 
+              'Apttus1.0' as CRM_SOURCE
+             , "Subscriber Org ID" AS CUSTOMER_ORG
+             , "Package ID" as LMA_PACKAGE_ID
+             , "DATE" as ACTIVITY_MONTH_DATE
+             , count(distinct "User ID") AS MONTHLY_UNIQUE_USERS   
+             , (select MAX(PACKAGEID) FROM APTTUS_DW.PRODUCT."Master_Package_List" WHERE LMA_PACKAGE_ID = A."Package ID"
+               ) AS PACKAGE_ID -- PACKAGE_ID_AA is the one used for App Analytics          
+        FROM APTTUS_DW.SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY A
+        GROUP BY "Subscriber Org ID"
+                , "Package ID" 
+                , "DATE"
+)
+select * from temp
+order by 2
+;
+*/     
 /* test counts
 select count(*), sum("Unique Users") from APTTUS_DW.PRODUCT."License_Monthly_History"; 
 */

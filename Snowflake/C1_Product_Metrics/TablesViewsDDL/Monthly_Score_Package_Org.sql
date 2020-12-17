@@ -1,6 +1,8 @@
 
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT."Monthly_Score_Package_Org"
-COMMENT = 'Combine Activity Scores with License for data from App Analytics'
+COMMENT = 'Combine Activity Scores with License for data from App Analytics
+-- 2020/12/16  using new standards for product to line and family roll up -- gdw
+'
 AS 
 SELECT 	CRM
 	, DATA_SOURCE
@@ -14,8 +16,8 @@ SELECT 	CRM
 	, PACKAGE_ID
 	, PACKAGE_NAME
 	, PRODUCT
-	, PRODUCTFAMILY
-	, PRODUCTPILLAR
+	, PRODUCT_LINE
+	, PRODUCT_FAMILY
 	, PRODUCT_LINE_C1
 	, MANAGED_PACKAGE_NAMESPACE
 	, ACTIVITY_COUNT
@@ -88,8 +90,8 @@ SELECT 	CRM
 	, PACKAGE_ID
 	, PACKAGE_NAME
 	, PRODUCT
-	, PRODUCTFAMILY
-	, PRODUCTPILLAR
+	, PRODUCT_LINE
+	, PRODUCT_FAMILY
 	, PRODUCT_LINE_C1
 	, MANAGED_PACKAGE_NAMESPACE
 	, ACTIVITY_COUNT

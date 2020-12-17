@@ -1,0 +1,312 @@
+﻿PRODUCT_ID,PRODUCT_NAME,<-- Product Family -->,<-- Product,<-- Product Line
+01t3Z000005VufCQAS,Conga Approvals,,Conga Approvals,Conga Approvals
+01t3Z0000057dzJQAQ,Contract Request Portal - Review & Approvals,,Conga Approvals,Conga Approvals
+01t3Z0000057dyVQAQ,Billing for CPQ User,,Conga Billing,Conga Billing
+01t3Z0000057dU7QAI,Billing Module (<100k invoices),,Conga Billing,Conga Billing
+01t3Z0000057dUGQAY,Billing Portal - Pooled Users,,Conga Billing,Conga Billing
+01t50000005Aa6vAAC,Conga Invoice Automation for Salesforce Billing,,Conga Billing,Conga Billing
+01t50000003tskJAAQ,Quickstart for Conga Invoicing for Salesforce Billing,,Conga Billing,Conga Billing
+01t50000005AtP5AAK,Accelerate - Conga Contracts for Salesforce - Business,,Conga CLM,Conga CLM
+01t50000005AtPAAA0,Accelerate - Conga Contracts for Salesforce - Enterprise,,Conga CLM,Conga CLM
+01t500000046ISuAAM,Accelerate for Conga Contracts for Salesforce CPQ,,Conga CLM,Conga CLM
+01t500000046ISzAAM,Accelerate for Conga Contracts Negotiator,,Conga CLM,Conga CLM
+01t3Z000004bMzJQAU,CLM Accelerator  Legacy Data Migration - Add On,,Conga CLM,Conga CLM
+01t3Z000004bhrHQAQ,CLM Accelerator Approvals Workflow - Add On,,Conga CLM,Conga CLM
+01t3Z000004bMzEQAU,CLM Accelerator- for Clinical Research,,Conga CLM,Conga CLM
+01t3Z000005VufMQAS,CLM Business Accelerator,,Conga CLM,Conga CLM
+01t3Z000005VufOQAS,CLM Contract Generator CFS Data Migration - Add On,,Conga CLM,Conga CLM
+01t3Z000005VufNQAS,CLM Contract Generator Salesforce Environments Migration- Add On,,Conga CLM,Conga CLM
+01t3Z000005VufLQAS,CLM Enterprise Accelerator,,Conga CLM,Conga CLM
+01t3Z0000057dUYQAY,CLM Enterprise Admin,,Conga CLM,Conga CLM
+01t3Z0000057dUAQAY,CLM Enterprise Approver,,Conga CLM,Conga CLM
+01t3Z0000057hmEQAQ,CLM Enterprise Collaborator,,Conga CLM,Conga CLM
+01t3Z0000057hmOQAQ,CLM Enterprise Collaborator Lite,,Conga CLM,Conga CLM
+01t3Z0000057dUXQAY,CLM Enterprise Lite,,Conga CLM,Conga CLM
+01t3Z0000057dUWQAY,CLM Enterprise Read Only,,Conga CLM,Conga CLM
+01t3Z0000057dTHQAY,CLM Enterprise Requestor,,Conga CLM,Conga CLM
+01t3Z0000057dUVQAY,CLM Enterprise User,,Conga CLM,Conga CLM
+01t3Z0000057dTwQAI,CLM Essentials Admin,,Conga CLM,Conga CLM
+01t3Z0000057dUQQAY,CLM Essentials Approver,,Conga CLM,Conga CLM
+01t3Z0000057hmTQAQ,CLM Essentials Collaborator,,Conga CLM,Conga CLM
+01t3Z0000057dTxQAI,CLM Essentials Lite,,Conga CLM,Conga CLM
+01t3Z0000057dTyQAI,CLM Essentials Read Only,,Conga CLM,Conga CLM
+01t3Z0000057dTvQAI,CLM Essentials User,,Conga CLM,Conga CLM
+01t3Z0000057dUJQAY,CLM for Partners - External Pooled Logins,,Conga CLM,Conga CLM
+01t3Z000005VufBQAS,CLM Foundation Accelerator,,Conga CLM,Conga CLM
+01t3Z000005VufEQAS,CLM Foundation Accelerator Templates,,Conga CLM,Conga CLM
+01t3Z000005VufFQAS,CLM Foundation CFS Data Migration - Add On,,Conga CLM,Conga CLM
+01t3Z000005VufGQAS,CLM Foundation Salesforce Environments Migration- Add On,,Conga CLM,Conga CLM
+01t3Z000005VufHQAS,CLM Generator Accelerator Templates - Add On,,Conga CLM,Conga CLM
+01t3Z000005VufDQAS,CLM Promotions,,Conga CLM,Conga CLM
+01t3Z0000057dURQAY,CLM QuickStart Admin,,Conga CLM,Conga CLM
+01t3Z0000057dTIQAY,CLM QuickStart Implementation Accelerator,,Conga CLM,Conga CLM
+01t3Z0000057dUUQAY,CLM QuickStart Lite,,Conga CLM,Conga CLM
+01t3Z0000057dUTQAY,CLM QuickStart Read Only,,Conga CLM,Conga CLM
+01t3Z0000057dUSQAY,CLM QuickStart User,,Conga CLM,Conga CLM
+01t3Z000005Vuf5QAC,Conga CLM Business Admin,,Conga CLM,Conga CLM
+01t3Z000005VuerQAC,Conga CLM Business Bundle,,Conga CLM,Conga CLM
+01t3Z000005Vuf3QAC,Conga CLM Business Collaborator,,Conga CLM,Conga CLM
+01t3Z000005Vuf4QAC,Conga CLM Business Collaborator Lite,,Conga CLM,Conga CLM
+01t3Z000005Vuf2QAC,Conga CLM Business Read Only User,,Conga CLM,Conga CLM
+01t3Z000005Vuf1QAC,Conga CLM Business User,,Conga CLM,Conga CLM
+01t3Z000005VuevQAC,Conga CLM Contract Generator Admin,,Conga CLM,Conga CLM
+01t3Z000005VuepQAC,Conga CLM Contract Generator Bundle,,Conga CLM,Conga CLM
+01t3Z000005VueuQAC,Conga CLM Contract Generator Read Only User,,Conga CLM,Conga CLM
+01t3Z000005VuetQAC,Conga CLM Contract Generator User,,Conga CLM,Conga CLM
+01t3Z000005VufAQAS,Conga CLM Enterprise Admin,,Conga CLM,Conga CLM
+01t3Z000005VuesQAC,Conga CLM Enterprise Bundle,,Conga CLM,Conga CLM
+01t3Z000005Vuf8QAC,Conga CLM Enterprise Collaborator,,Conga CLM,Conga CLM
+01t3Z000005Vuf9QAC,Conga CLM Enterprise Collaborator Lite,,Conga CLM,Conga CLM
+01t3Z000005Vuf7QAC,Conga CLM Enterprise Read Only User,,Conga CLM,Conga CLM
+01t3Z000005Vuf6QAC,Conga CLM Enterprise User,,Conga CLM,Conga CLM
+01t3Z000005Vuf0QAC,Conga CLM Foundation Admin,,Conga CLM,Conga CLM
+01t3Z000005VueqQAC,Conga CLM Foundation Bundle,,Conga CLM,Conga CLM
+01t3Z000005VueyQAC,Conga CLM Foundation Collaborator,,Conga CLM,Conga CLM
+01t3Z000005VuezQAC,Conga CLM Foundation Collaborator Lite,,Conga CLM,Conga CLM
+01t3Z000005VuexQAC,Conga CLM Foundation Read Only User,,Conga CLM,Conga CLM
+01t3Z000005VuewQAC,Conga CLM Foundation User,,Conga CLM,Conga CLM
+01t50000005Aze4AAC,Conga Contracts - Add-on: Analytics,,Conga CLM,Conga CLM
+01t50000005AtywAAC,Conga Contracts - Add-on: BI Toolkit - 2 Custom Reports,,Conga CLM,Conga CLM
+01t50000005AzedAAC,Conga Contracts - Add-on: Gateway Service,,Conga CLM,Conga CLM
+01t50000005AtyDAAS,Conga Contracts - Add-on: Negotiation Portal,,Conga CLM,Conga CLM
+01t1T0000059yKrQAI,Conga Contracts - Add-on: Request/View Only User from Salesforce,,Conga CLM,Conga CLM
+01t50000005AtxtAAC,Conga Contracts - Add-on: Supplier Registration Portal,,Conga CLM,Conga CLM
+01t50000005AzdpAAC,Conga Contracts - Add-on: Yearly Backup Service,,Conga CLM,Conga CLM
+01t50000005AzeiAAC,Conga Contracts - Analytics User,,Conga CLM,Conga CLM
+01t1T000005KTYhQAO,Conga Contracts - Data Migration Services,,Conga CLM,Conga CLM
+01t50000005B1UQAA0,Conga Contracts - DS/Adobe Cloud User,,Conga CLM,Conga CLM
+01t50000005Aty3AAC,Conga Contracts - Enterprise Edition,,Conga CLM,Conga CLM
+01t50000005AzeTAAS,Conga Contracts - On Premises,,Conga CLM,Conga CLM
+01t50000005AtyrAAC,Conga Contracts - Sandbox Annual Maintenance,,Conga CLM,Conga CLM
+01t1T000004900vQAA,Conga Contracts - Sandbox Set-up,,Conga CLM,Conga CLM
+01t500000046I3tAAE,Conga Contracts Enterprise CLM,,Conga CLM,Conga CLM
+01t1T000005emm4QAA,Conga Contracts for Salesforce – Add-on: Request/View Only User - Site License,,Conga CLM,Conga CLM
+01t50000005AtxyAAC,Conga Contracts for Salesforce - Business,,Conga CLM,Conga CLM
+01t50000005BBcDAAW,Conga Contracts for Salesforce - Enterprise,,Conga CLM,Conga CLM
+01t1T000005e9uDQAQ,Conga Contracts for Salesforce - Enterprise - Navigate Solution,,Conga CLM,Conga CLM
+01t50000005Aty8AAC,Conga Contracts for Salesforce - Negotiator,,Conga CLM,Conga CLM
+01t50000004mQCHAA2,Conga Contracts for Salesforce - Request Only,,Conga CLM,Conga CLM
+01t50000004lb7QAAQ,Conga Contracts Legal User,,Conga CLM,Conga CLM
+01t50000004lb7fAAA,Conga Contracts Sales User,,Conga CLM,Conga CLM
+01t3Z000005Vv49QAC,Contract Generator Accelerator,,Conga CLM,Conga CLM
+01t50000005AtPeAAK,Transform - Conga Contracts for Salesforce - Business,,Conga CLM,Conga CLM
+01t50000005AtPjAAK,Transform - Conga Contracts for Salesforce - Enterprise,,Conga CLM,Conga CLM
+01t500000046IT9AAM,Transform for Conga Contracts for Salesforce CPQ,,Conga CLM,Conga CLM
+01t1T000005pkgBQAQ,Conga Composer - Add-on: Batch / Trigger Service Events - Starter Pack - Bundle,,Conga Composer,Conga Composer
+01t50000005At6xAAC,Conga Composer - Business - Overage,,Conga Composer,Conga Composer
+01t1T000005pkg6QAA,Conga Composer - Business - Per Click Events - Starter Pack - Bundle,,Conga Composer,Conga Composer
+01t1T000005Bs4iQAC,Conga Composer - Business - Starter Pack - Bundle,,Conga Composer,Conga Composer
+01t1T000005pkg1QAA,Conga Composer - Enterprise - Starter Pack - Bundle,,Conga Composer,Conga Composer
+01t50000005AtThAAK,Conga Composer - Service Level Agreement Credit,,Conga Composer,Conga Composer
+01t3Z000004br84QAA,Conga Composer Advanced Features,,Conga Composer,Conga Composer
+01t3Z000005VufIQAS,Conga Composer Business Batch/Trigger Per Service Events,,Conga Composer,Conga Composer
+01t3Z000004br7kQAA,Conga Composer Business Batch/Trigger Service Events Block of 500,,Conga Composer,Conga Composer
+01t3Z000004br7uQAA,Conga Composer Business Edition for Communities/Force.com Users,,Conga Composer,Conga Composer
+01t3Z000005VufKQAS,Conga Composer Business Edition Per Click Events,,Conga Composer,Conga Composer
+01t3Z000004br7aQAA,Conga Composer Business Edition Per Click Events Block of 500,,Conga Composer,Conga Composer
+01t3Z000004br7pQAA,Conga Composer Business Edition User,,Conga Composer,Conga Composer
+01t3Z000005VufJQAS,Conga Composer Enterprise Batch/Trigger Per Service Events,,Conga Composer,Conga Composer
+01t3Z000004br8JQAQ,Conga Composer Enterprise Batch/Trigger Service Events Block of 500,,Conga Composer,Conga Composer
+01t50000003wgwXAAQ,Conga Composer Enterprise Edition Accelerate Professional Services,,Conga Composer,Conga Composer
+01t3Z000004br7zQAA,Conga Composer Enterprise Edition for Communities/Force.com Users,,Conga Composer,Conga Composer
+01t50000003wgwSAAQ,Conga Composer Enterprise Edition QuickStart Professional Services,,Conga Composer,Conga Composer
+01t50000003wgwcAAA,Conga Composer Enterprise Edition Transform Professional Services,,Conga Composer,Conga Composer
+01t3Z000004br8EQAQ,Conga Composer Enterprise Edition User,,Conga Composer,Conga Composer
+01t50000001avflAAA,Conga Composer for Salesforce CRM - Consulting Reseller,,Conga Composer,Conga Composer
+01t50000001avgAAAQ,Conga Composer for Salesforce CRM - Consulting Reseller,,Conga Composer,Conga Composer
+01t50000001avgPAAQ,Conga Composer for Salesforce CRM - Consulting Reseller,,Conga Composer,Conga Composer
+01t500000026A2AAAU,Conga Composer for Salesforce CRM - Consulting Reseller (25%),,Conga Composer,Conga Composer
+01t500000026A1vAAE,Conga Composer for Salesforce CRM - Consulting Reseller (25%),,Conga Composer,Conga Composer
+01t500000026A1qAAE,Conga Composer for Salesforce CRM - Consulting Reseller (25%),,Conga Composer,Conga Composer
+01t50000002ckBCAAY,Conga Composer for Salesforce CRM Communities and Force.com Platform,,Conga Composer,Conga Composer
+01t50000002sMrdAAE,Conga Composer for Salesforce CRM Communities and Force.com Platform- Reseller (25%),,Conga Composer,Conga Composer
+01t50000002sMriAAE,Conga Composer for Salesforce CRM Communities and Force.com Platform-Reseller (25%),,Conga Composer,Conga Composer
+01t50000002sMrTAAU,Conga Composer for Salesforce CRM Communities and Force.com Platform-Reseller (25%),,Conga Composer,Conga Composer
+01t50000001ABPKAA4,Conga Composer for Salesforce CRM Portal and Force.com Platform,,Conga Composer,Conga Composer
+01t50000001AabTAAS,Conga Composer for Salesforce CRM Portal and Force.com Platform - Consulting Reseller,,Conga Composer,Conga Composer
+01t5000000250dFAAQ,"Conga Composer for Salesforce CRM Portal and Force.com Platform - ISV/OEM (Fusion Tier 2,500+)",,Conga Composer,Conga Composer
+01t50000001avePAAQ,Conga Composer for Salesforce CRM Portal and Force.com Platform - ISV/OEM Tier 04,,Conga Composer,Conga Composer
+01t50000001aveUAAQ,Conga Composer for Salesforce CRM Portal and Force.com Platform - ISV/OEM Tier 05,,Conga Composer,Conga Composer
+01t50000001aveZAAQ,Conga Composer for Salesforce CRM Portal and Force.com Platform - ISV/OEM Tier 06,,Conga Composer,Conga Composer
+01t50000001ATnLAAW,Conga Composer for Salesforce CRM- Unlimited Enterprise Access,,Conga Composer,Conga Composer
+01t50000002rpjDAAQ,"Conga Composer for Salesforce CRM, DocuSign Tier 2 (300+)",,Conga Composer,Conga Composer
+01t50000001avfMAAQ,"Conga Composer for Salesforce CRM, ISV/OEM Tier 6 (10,000-24,999)",,Conga Composer,Conga Composer
+01t50000001avfRAAQ,"Conga Composer for Salesforce CRM, ISV/OEM Tier 7 (25,000-49,999)",,Conga Composer,Conga Composer
+01t50000001aelpAAA,Conga Composer for Salesforce Portal and Force.com Platform,,Conga Composer,Conga Composer
+01t500000016mv0AAA,Conga Composer for salesforce.com,,Conga Composer,Conga Composer
+01t500000016mv1AAA,Conga Composer for salesforce.com,,Conga Composer,Conga Composer
+01t50000001AQ6QAAW,Conga Composer Portal and Force.com Platform,,Conga Composer,Conga Composer
+01t500000019FQFAA2,Enterprise Service Plan 200 - Annual - Conga Conductor & Workflow,,Conga Composer,Conga Composer
+01t5000000186esAAA,Enterprise Service Plan 2000 - Annual - Conga Conductor & Workflow,,Conga Composer,Conga Composer
+01t500000019H5sAAE,Enterprise Service Plan 3500 - Annual - Conga Conductor & Workflow,,Conga Composer,Conga Composer
+01t5000000186exAAA,Enterprise Service Plan 4000 - Annual - Conga Conductor & Workflow,,Conga Composer,Conga Composer
+01t50000004VoemAAC,Excess Utilization: API Events for Conga Composer,,Conga Composer,Conga Composer
+01t50000001bRXvAAM,Service Events for Conga Composer,,Conga Composer,Conga Composer
+01t50000002cHk1AAE,Service Events for Conga Composer,,Conga Composer,Conga Composer
+01t50000001bRWmAAM,Service Events for Conga Composer,,Conga Composer,Conga Composer
+01t50000001bRWVAA2,Service Events for Conga Composer,,Conga Composer,Conga Composer
+01t50000001bRXbAAM,Service Events for Conga Composer,,Conga Composer,Conga Composer
+01t50000001bRX7AAM,Service Events for Conga Composer,,Conga Composer,Conga Composer
+01t50000001bRY0AAM,Service Events for Conga Composer,,Conga Composer,Conga Composer
+01t50000001bRY5AAM,Service Events for Conga Composer,,Conga Composer,Conga Composer
+01t50000001bRXlAAM,Service Events for Conga Composer,,Conga Composer,Conga Composer
+01t50000001bRXqAAM,Service Events for Conga Composer,,Conga Composer,Conga Composer
+01t50000002d2dHAAQ,Service Events for Conga Composer 0500,,Conga Composer,Conga Composer
+01t50000002d2d7AAA,Service Events for Conga Composer 05K,,Conga Composer,Conga Composer
+01t50000002d2d2AAA,Service Events for Conga Composer 10K,,Conga Composer,Conga Composer
+01t50000002dfK2AAI,Service Events for Conga Composer 25K,,Conga Composer,Conga Composer
+01t50000002eR5mAAE,Service Events for Conga Conductor/Conga Workflow,,Conga Composer,Conga Composer
+01t50000002blngAAA,Service Events for Conga Conductor/Conga Workflow,,Conga Composer,Conga Composer
+01t50000002eR5hAAE,Service Events for Conga Conductor/Conga Workflow,,Conga Composer,Conga Composer
+01t500000019c50AAA,Service Events for Conga Conductor/Conga Workflow,,Conga Composer,Conga Composer
+01t50000002tRw3AAE,Service Events for Conga Conductor/Conga Workflow- Reseller,,Conga Composer,Conga Composer
+01t1T000005KXIIQA4,Transform - Conga Composer - Enterprise,,Conga Composer,Conga Composer
+01t50000002tKOhAAM,User Month Service for Conga Composer,,Conga Composer,Conga Composer
+01t50000002tHkwAAE,User Month Service for Conga Composer - Non-Profit Edition,,Conga Composer,Conga Composer
+01t500000046FlSAAU,Novatus Contracts - Subscription Discount,,Conga Contracts,Conga Contracts
+01t50000004SGVEAA4,Novatus Enhanced Support,,Conga Contracts,Conga Contracts
+01t50000005Aa5dAAC,Conga Courier,,Conga Courier,Conga Courier
+01t50000005AtKyAAK,Conga Courier - Service Events - Site License,,Conga Courier,Conga Courier
+01t50000005AtKoAAK,Conga Courier - Service Events Overage,,Conga Courier,Conga Courier
+01t50000000kevpAAA,Conga Courier Enterprise - Prepaid Annual Discount,,Conga Courier,Conga Courier
+01t50000002bQqkAAE,Conga Courier Enterprise 1750 - Annual,,Conga Courier,Conga Courier
+01t50000001agymAAA,Conga Courier Enterprise 25000 - Annual,,Conga Courier,Conga Courier
+01t50000002776XAAQ,Conga Courier Enterprise 7500 - Annual,,Conga Courier,Conga Courier
+01t50000003UkU3AAK,Conga Courier for Salesforce CRM - Enterprise Site License,,Conga Courier,Conga Courier
+01t3Z0000057dU1QAI,CPQ Enterprise Admin,,Conga CPQ,Conga CPQ
+01t3Z000005Vm45QAC,CPQ Enterprise Approver,,Conga CPQ,Conga CPQ
+01t3Z0000057dU3QAI,CPQ Enterprise Lite,,Conga CPQ,Conga CPQ
+01t3Z0000057dU2QAI,CPQ Enterprise Read Only,,Conga CPQ,Conga CPQ
+01t3Z0000057dU0QAI,CPQ Enterprise User,,Conga CPQ,Conga CPQ
+01t3Z0000057dTqQAI,CPQ Essentials Admin,,Conga CPQ,Conga CPQ
+01t3Z000005Vm3vQAC,CPQ Essentials Approver,,Conga CPQ,Conga CPQ
+01t3Z000004bMyzQAE,CPQ Essentials Implementation Accelerator Plus,,Conga CPQ,Conga CPQ
+01t3Z0000057dTrQAI,CPQ Essentials Lite,,Conga CPQ,Conga CPQ
+01t3Z0000057dTsQAI,CPQ Essentials Read Only,,Conga CPQ,Conga CPQ
+01t3Z0000057dTpQAI,CPQ Essentials User,,Conga CPQ,Conga CPQ
+01t3Z0000057dUgQAI,CPQ for Partners - External Named Users,,Conga CPQ,Conga CPQ
+01t3Z0000057dTDQAY,CPQ for Partners - External Pooled Logins,,Conga CPQ,Conga CPQ
+01t3Z0000057dTRQAY,CPQ QuickStart Admin,,Conga CPQ,Conga CPQ
+01t3Z0000057dTnQAI,CPQ QuickStart Implementation Accelerator,,Conga CPQ,Conga CPQ
+01t3Z0000057dTSQAY,CPQ QuickStart Lite,,Conga CPQ,Conga CPQ
+01t3Z0000057dTgQAI,CPQ QuickStart Read Only,,Conga CPQ,Conga CPQ
+01t3Z0000057dTQQAY,CPQ QuickStart User,,Conga CPQ,Conga CPQ
+01t50000005AtLDAA0,Credit adjustment - Miscellaneous,,Conga CPQ,Conga CPQ
+01t500000046ITsAAM,Custom SOW for Conga Contracts for Salesforce CPQ,,Conga CPQ,Conga CPQ
+01t3Z0000057dUbQAI,QTC Enterprise Admin,,Conga CPQ,Conga CPQ
+01t3Z0000057dUcQAI,QTC Enterprise Lite,,Conga CPQ,Conga CPQ
+01t3Z0000057dUaQAI,QTC Enterprise User,,Conga CPQ,Conga CPQ
+01t3Z0000057dTKQAY,QTC for Partners - External Named Users,,Conga CPQ,Conga CPQ
+01t3Z0000057dTAQAY,QTC for Partners - External Pooled Logins,,Conga CPQ,Conga CPQ
+01t3Z0000057dUdQAI,QTC Read Only,,Conga CPQ,Conga CPQ
+01t500000046ISfAAM,Quickstart for Conga Contracts for Salesforce CPQ,,Conga CPQ,Conga CPQ
+01t3Z0000057e6OQAQ,Ultimate CPQ Edition Review and Approve Only,,Conga CPQ,Conga CPQ
+01t50000003w3YTAAY,Accelerate - Conga ActionGrid,,Conga Grid,Conga Grid
+01t50000005AtPKAA0,Accelerate - Conga Grid,,Conga Grid,Conga Grid
+01t50000005AZfAAAW,Actiongrid,,Conga Grid,Conga Grid
+01t50000003w3YYAAY,ActionGrid Transform Professional Services,,Conga Grid,Conga Grid
+01t50000003tODIAA2,AG_NonRenewal,,Conga Grid,Conga Grid
+01t1T0000049C64QAE,Conga Grid - Product Site License - Licensed Users,,Conga Grid,Conga Grid
+01t1T0000049C5pQAE,Conga Grid - Product Site License - Site Users,,Conga Grid,Conga Grid
+01t1T000005pkgGQAQ,Conga Grid - Starter Pack - Bundle,,Conga Grid,Conga Grid
+01t50000003w3YJAAY,QuickStart Advisory - Conga ActionGrid,,Conga Grid,Conga Grid
+01t50000003w3ZNAAY,Transform - Conga ActionGrid,,Conga Grid,Conga Grid
+01t50000005AtPtAAK,Transform - Conga Grid,,Conga Grid,Conga Grid
+01t3Z000005VbNiQAK,Conga Orchestrate,,Conga Orchestrate,Conga Orchestrate
+01t1T000005KtnaQAC,Conga Orchestrate - Business,,Conga Orchestrate,Conga Orchestrate
+01t1T000005pkgLQAQ,Conga Orchestrate - Starter Pack - Bundle,,Conga Orchestrate,Conga Orchestrate
+01t50000005At7HAAS,Conga Security and Compliance Team Review Fee,,Conga Orchestrate,Conga Orchestrate
+01t50000005Aa7AAAS,Conga Sign,,Conga Sign,Conga Sign
+01t1T000005pkgQQAQ,Conga Sign - Starter Pack - Bundle,,Conga Sign,Conga Sign
+01t50000005AtzYAAS,Conga Sign - Transactions Overage,,Conga Sign,Conga Sign
+01t3Z000005Vv4EQAS,Conga Sign Essentials Accelerator,,Conga Sign,Conga Sign
+01t3Z000005Vv4TQAS,Conga Sign Essentials Plus Accelerator,,Conga Sign,Conga Sign
+01t1T000005dxA4QAI,Conga Sign for Salesforce - Add-on: SMS Events Overage,,Conga Sign,Conga Sign
+01t3Z000004bJILQA2,Conga Sign for Salesforce – SMS Events,,Conga Sign,Conga Sign
+01t1T000005UHRRQA4,Conga Sign for Salesforce - Transactions Overage,,Conga Sign,Conga Sign
+01t50000004mhLYAAY,Conga Sign Transaction Overages,,Conga Sign,Conga Sign
+01t50000004mhLxAAI,Conga Sign Transactions,,Conga Sign,Conga Sign
+01t3Z0000057e6iQAA,X-Author Enterprise - 3 Apps,,Conga X-Author Enterprise,Conga X-Author Enterprise
+01t50000005ARhjAAG,Octiv Site License,,Mix,Mix
+01t500000018CRmAAM,"3"" Nails",,Other,Other
+01t50000002tJHaAAM,Americas Tier 2 Webinar,,Other,Other
+01t50000005AtL3AAK,Bank Wire Processing Fee,,Other,Other
+01t50000003u5DSAAY,Connect 2017 Sponsorship,,Other,Other
+01t3Z0000057dU8QAI,Order Management - Module,,Other,Other
+01t3Z000005Vj3yQAC,Order Management Module – Growth,,Other,Other
+01t1T0000049TFEQA2,Public Instructor Led Training Course,,Other,Other
+01t1T0000059lLHQAY,Pulse,,Other,Other
+01t3Z0000057e5QQAQ,Rebate Manager Module  - Enterprise,,Other,Other
+01t3Z0000057e5TQAQ,Renewal Solution,,Other,Other
+01t3Z000005VfhYQAS,Salesforce Shield - Event Monitoring 10% of ACV paid to Apttus Fee,,Other,Other
+01t3Z000005VfhiQAC,Salesforce Shield- 30% of ACV paid to Apttus Fee,,Other,Other
+01t3Z0000057dTmQAI,Salesforce Shield Platform Encryption,,Other,Other
+01t50000005AbVJAA0,Sight Read,,Other,Other
+01t3Z0000057e5oQAA,Sponsorships - Accelerate,,Other,Other
+01t3Z0000057rSqQAI,TAM,,Other,Other
+01t50000003CEP1AAO,Tax Refund,,Other,Other
+01t3Z0000057dTEQAY,Technical Account Manager,,Other,Other
+01t3Z000005Vb2FQAS,TurboConfig,,Other,Other
+01t3Z000005Vb3mQAC,TurboConfig Dev Sandbox,,Other,Other
+01t3Z000005Vb2KQAS,TurboEngines,,Other,Other
+01t3Z000005Vb3hQAC,TurboEngines Dev Sandbox,,Other,Other
+01t3Z000005Vb2UQAS,TurboPricing,,Other,Other
+01t3Z000005Vb3cQAC,TurboPricing Dev Sandbox,,Other,Other
+01t50000004mLtUAAU,PS-Document Automation Business Custom SOW,,Professional Services,Professional Services
+01t50000004mLtWAAU,PS-Document Automation Business Suite,,Professional Services,Professional Services
+01t50000004mLtVAAU,PS-Document Automation Enterprise Custom SOW,,Professional Services,Professional Services
+01t50000004mLtMAAU,PS-Document Automation Enterprise Suite,,Professional Services,Professional Services
+01t50000004mLtSAAU,PS-Sales and Support Automation Business Custom SOW,,Professional Services,Professional Services
+01t50000004mLtQAAU,PS-Sales and Support Automation Business Ed for Sales,,Professional Services,Professional Services
+01t50000004mLtLAAU,PS-Sales and Support Automation Enterprise Custom SOW,,Professional Services,Professional Services
+01t50000004mLtNAAU,PS-Sales and Support Automation Enterprise Ed for Sales,,Professional Services,Professional Services
+01t3Z0000057dTFQAY,Additional Support Contact,,Support,Support
+01t50000002bEf8AAE,Annual CongaSphere Complimentary Live Support Allowance (Hours),,Support,Support
+01t50000005AtWgAAK,Annual CongaSphere Complimentary Live Support Allowance (Hours),,Support,Support
+01t1T000005UBBqQAO,Basic Support,,Support,Support
+01t50000003tsk9AAA,Basic Support For Conga Invoicing for Salesforce Billing,,Support,Support
+01t50000005B0CMAA0,Sales and Support Automation - Enterprise - Solution,,Support,Support
+01t50000004mLtOAAU,Sales and Support Automation Business Suite,,Support,Support
+01t50000004mLtXAAU,Sales and Support Automation Enterprise Suite,,Support,Support
+01t50000003tYRIAA2,Standard Support,,Support,Support
+01t50000005BAZsAAO,Technical Customer Support for Partner Licenses,,Support,Support
+01t3Z0000057e65QAA,Technical Support Resource,,Support,Support
+01t500000046ITxAAM,Custom SOW for Conga Contracts Negotiator,,Conga CLM,Conga CLM
+01t3Z0000057dU5QAI,Deal-Maximizer,,Other,Other
+01t3Z0000057dzkQAA,Digital Contract Management,,Other,Other
+01t50000003tLuqAAE,Discount TMDEVPIV,,Other,Other
+01t50000003tLugAAE,Discount TMDEVSF,,Other,Other
+01t50000003tMsmAAE,Discounts - Pro Serv,,Professional Services,Professional Services
+01t50000004mLtRAAU,Document Automation Business Suite,,Conga Automation,Conga Automation
+01t50000004mLtKAAU,Document Automation Enterprise Suite,,Conga Automation,Conga Automation
+01t3Z0000057dUBQAY,E-Commerce - Named Users,,Other,Other
+01t3Z0000057dTLQAY,E-Commerce Add-on Block - 15k Named Users,,Other,Other
+01t3Z0000057dTJQAY,E-Commerce Add-on Block - 20k Pooled Users,,Other,Other
+01t1T00000492yrQAA,Elite Support,,Support,Support
+01t3Z0000057tpGQAQ,Enterprise CPQ Edition Lite,,Conga CPQ,Conga CPQ
+01t3Z0000057e0DQAQ,Enterprise QTC with X-Author - Block of 100,,Conga CPQ,Conga CPQ
+01t3Z0000057e0EQAQ,Enterprise QTC with X-Author - Block of 20,,Conga CPQ,Conga CPQ
+01t3Z0000057e0LQAQ,Full User Bundle,,Other,Other
+01t3Z0000057e0ZQAQ,Infrastructure Cost,,Other,Other
+01t50000002tJHLAA2,International Tier 1 Webinar,,Support,Support
+01t50000002tJHQAA2,International Tier 2 Webinar,,Support,Support
+01t50000003uBpvAAE,Invoice Excess Charge for Conga Invoice Automation for Salesforce Billing,,Conga Billing,Conga Billing
+01t50000003uBpqAAE,Invoice Subscription for Conga Invoice Automation for Salesforce Billing,,Conga Billing,Conga Billing
+01t3Z0000057e0gQAA,Light User Bundle,,Other,Other
+01t3Z0000057e0kQAA,Machine Learning: Contract Optimization,,Conga Contracts,Conga AI
+01t3Z0000057e0rQAA,Max  CaaS - 5,,Support,Support
+01t3Z0000057e0wQAA,MAX & Support,,Support,Support
+01t3Z0000057dU4QAI,Max Intelligent Assistant,,Other,Other
+01t3Z0000057e12QAA,NDA Request/Contract Wizard Lite,,Other,Other
+01t50000003wB3sAAE,Negotiator Accelerate,,Professional Services,Professional Services
+01t50000003wB47AAE,Negotiator Custom SOW,,Professional Services,Professional Services
+01t50000003wAbtAAE,Negotiator QuickStart,,Professional Services,Professional Services
+01t3Z0000057lyuQAA,Netsuite Connector,,Other,Other
+01t3Z0000057e13QAA,New Solution,,Other,Other
+01t50000001ajMIAAY,New Subscription Discount,,Other,Other
+01t3Z0000057e4EQAQ,Nokia CPO,,Other,Other
+01t3Z0000057e4FQAQ,Nokia CPO Admin,,Other,Other
+01t3Z0000057e4oQAA,Payment Calculation Engine,,Other,Other
+01t3Z0000057kVUQAY,Performance Test-Environment,,Other,Other
+01t50000003tskEAAQ,Preferred Support For Conga Invoicing for Salesforce Billing,,Conga Billing,Conga Billing
+01t3Z0000057e4yQAA,Proof of Performance,,Other,Other

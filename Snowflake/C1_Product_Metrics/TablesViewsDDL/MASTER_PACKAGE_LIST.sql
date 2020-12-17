@@ -29,7 +29,7 @@ union
         LEFT OUTER JOIN     APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE_TWO C
                          ON A.ID = C.PACKAGE_ID                       
 ;
-
+/*
 -- test unique 2 ways
 Select count(*), PACKAGEID
 from  APTTUS_DW.PRODUCT."Master_Package_List"
@@ -41,4 +41,18 @@ Select count(*), LMA_PACKAGE_ID
 from  APTTUS_DW.PRODUCT."Master_Package_List"
 group by LMA_PACKAGE_ID
 having COUNT(*) > 1
+;
+*/
+
+CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT.MASTER_PACKAGE_LIST_FL
+COMMENT = 'Field Label version of Master PAckage List'
+AS 
+        SELECT PACKAGEID                                AS "Package ID"
+             , COALESCE(LMA_PACKAGE_ID, 'Unknown')      AS "LMA Package ID"
+             , COALESCE(SFLMA_PACKAGE_ID18, 'Unknown')  AS "LMA Package ID18"
+             , COALESCE(PACKAGE_NAME, 'Unknown')        AS "Package Name" 
+             , COALESCE(PRODUCT, 'Unknown')             AS "Product Line"
+             , COALESCE(PRODUCTFAMILY, 'Unknown')       AS "Product Family"   
+             , COALESCE(PRODUCTPILLAR, 'Unknown')       AS "Product Pillar"
+        FROM                APTTUS_DW.PRODUCT."Master_Package_List"              
 ;

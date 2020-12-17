@@ -1,7 +1,9 @@
 --DROP VIEW APTTUS_DW.PRODUCT.LMA_LIC_PRODUCTLINE_CURRENT;
 
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT.LMA_LIC_PRODUCTLINE_CURRENT
-COMMENT = 'Compute fields and windows for further License / Productline processing.  Current view'
+COMMENT = 'Compute fields and windows for further License / Productline processing.  Current view
+-- 2020/12/15 switch out old>MASTER_PRODUCT_FAMILY for new>MASTER_PRODUCT_PACKAGE_MAPPING to get product hierarchy fields - GDW
+'
 AS 
 WITH license_with_orgs_override as (
         SELECT
@@ -69,12 +71,13 @@ WITH license_with_orgs_override as (
                 , L.CUSTOMER_ORG_ID__C                          AS CUSTOMER_ORG
                 , L.CUSTOMER_ORG_ID__C                          AS CUSTOMER_ORG_18
                 , substring(L.SFLMA__SUBSCRIBER_ORG_ID__C,1,15) AS CUSTOMER_ORG_15  
-                , P.PRODUCTFAMILY
+                , P.PRODUCT_FAMILY                          AS PRODUCTFAMILY 
                 , P.PRODUCT                                 -- replaces C1 product_line but will still match Assets product_line 
-                , P.PACKAGENAME                             AS PACKAGE_NAME                         
+                , P.PACKAGE_NAME                            AS PACKAGE_NAME                         
                 , L.PACKAGE_NAMEFX__C                       AS PACKAGE_NAMEFX
                 , L.SFLMA__PACKAGE__C                       AS PACKAGE_ID
-                , LEFT(PK.SFLMA__PACKAGE_ID__C,15)          AS PACKAGE_ID_AA -- key to package for app analytics not sure if 15 is right for C1                
+--                , LEFT(PK.SFLMA__PACKAGE_ID__C,15)          AS PACKAGE_ID_AA -- key to package for app analytics not sure if 15 is right for C1                
+                , P.LMA_PACKAGE_ID                          AS PACKAGE_ID_AA
                 , L.SFLMA__PACKAGE_VERSION__C               AS PACKAGE_VERSION_ID
                 , CUSTOMER_ORG_15 || '-' || PACKAGE_ID      AS ORG_PACKAGE
                 , L.SFLMA__LICENSE_STATUS__C                AS STATUS
@@ -198,8 +201,8 @@ WITH license_with_orgs_override as (
                    ELSE NULL
                   END AS LMA_ORIGINAL_SEATS         
         FROM                           license_with_orgs_override L
-        LEFT OUTER JOIN                APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_FAMILY P
-                          ON L.SFLMA__PACKAGE__C = P.PACKAGEID   
+        LEFT OUTER JOIN        APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_PACKAGE_MAPPING P
+                          ON L.SFLMA__PACKAGE__C = P.PACKAGE_ID
         LEFT JOIN                      APTTUS_DW.SF_CONGA1_1.SFLMA__PACKAGE__C PK 
                           ON L.SFLMA__PACKAGE__C = PK.ID                                                                                               
         WHERE L.ISDELETED = FALSE 
@@ -212,12 +215,12 @@ UNION
                 , L.SFLMA__SUBSCRIBER_ORG_ID__C                 AS CUSTOMER_ORG
                 , NULL                                          AS CUSTOMER_ORG_18
                 , substring(L.SFLMA__SUBSCRIBER_ORG_ID__C,1,15) AS CUSTOMER_ORG_15                  
-                , P.PRODUCTFAMILY
+                , P.PRODUCT_FAMILY                          AS PRODUCTFAMILY
                 , P.PRODUCT
                 , L.PACKAGE_NAME__C                         AS PACKAGE_NAME
                 , NULL                                      AS PACKAGE_NAMEFX                
                 , L.SFLMA__PACKAGE__C                       AS PACKAGE_ID
-                , LEFT(PK.SFLMA__PACKAGE_ID__C,15)          AS PACKAGE_ID_AA -- key to package for app analytics
+                , P.LMA_PACKAGE_ID                          AS PACKAGE_ID_AA
                 , L.SFLMA__PACKAGE_VERSION__C               AS PACKAGE_VERSION_ID
                 , CUSTOMER_ORG_15 || '-' || PACKAGE_ID      AS ORG_PACKAGE
                 , L.SFLMA__LICENSE_STATUS__C                AS STATUS
@@ -315,10 +318,8 @@ UNION
                 , 'NA'                                     AS ORG_SEATS_OVERRIDE 
                 , NULL                                     AS LMA_ORIGINAL_SEATS 
         FROM                   APTTUS_DW.SNAPSHOTS.LMA_LICENSE_CLMCPQ_CURRENT L
-        LEFT OUTER JOIN        APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_FAMILY P
-                          ON L.SFLMA__PACKAGE__C = P.PACKAGEID
-        LEFT OUTER JOIN        APTTUS_DW.SALESFORCE_CLMCPQ.SFLMA__PACKAGE__C PK 
-                          ON L.SFLMA__PACKAGE__C = PK.ID                   
+        LEFT OUTER JOIN        APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_PACKAGE_MAPPING P
+                          ON L.SFLMA__PACKAGE__C = P.PACKAGE_ID                 
         LEFT OUTER JOIN        APTTUS_DW.PRODUCT.CLMCPQ_A1_ACCOUNT_MAPPING M
                           ON L.SFLMA__ACCOUNT__C = M.CLMCPQ_ACCOUNT_ID                  
         WHERE L.ISDELETED = FALSE  

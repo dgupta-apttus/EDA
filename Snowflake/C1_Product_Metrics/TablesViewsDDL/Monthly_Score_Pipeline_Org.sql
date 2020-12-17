@@ -1,6 +1,8 @@
 
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT."Monthly_Score_Pipeline_Org"
-COMMENT = 'Combine Activity Scores with License for data from App Analytics'
+COMMENT = 'Combine Activity Scores with License for data from App Analytics
+-- 2020/12/16  replace OLD> Master_Package_List with NEW> MASTER_PRODUCT_PACKAGE_MAPPING for product line lookups -- gdw
+'
 AS 
         SELECT    'Conga1.0' AS CRM
                 , 'Pipeline' AS DATA_SOURCE 
@@ -14,8 +16,8 @@ AS
                 , A.PACKAGE_ID 
                 , B.PACKAGE_NAME
                 , B.PRODUCT
-                , B.PRODUCTFAMILY
-                , B.PRODUCTPILLAR   
+                , B.PRODUCT_LINE
+                , B.PRODUCT_FAMILY  
                 , A.PRODUCT_LINE AS PRODUCT_LINE_C1
                 , A.PACKAGE_NAMESPACE AS MANAGED_PACKAGE_NAMESPACE
                 , A.ACTIVITY_COUNT
@@ -99,14 +101,23 @@ AS
                   END AS ADOPTION_V1
                 , A.PERCENT_SERVICE_EVENTS::INTEGER AS "Service Events Percentage"                          
         FROM                  	APTTUS_DW.PRODUCT.MONTHLY_ACTIVITY_SCORES A 
-        LEFT OUTER JOIN         APTTUS_DW.PRODUCT."Master_Package_List" B
-                         ON  A.PACKAGE_ID = B.PACKAGEID
+        LEFT OUTER JOIN         APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_PACKAGE_MAPPING B
+                         ON  A.PACKAGE_ID = B.PACKAGE_ID
         LEFT OUTER JOIN         APTTUS_DW.PRODUCT.LMA_LIC_PACKAGE_MONTHLY C
                          ON   A.SOURCE_ORG_ID = C.CUSTOMER_ORG_18
                          AND  A.PACKAGE_ID = C.PACKAGE_ID
                          AND  A.REPORT_DATE = C.REPORTING_DATE                                
 ;
 
+
+select count(*) 
+      , REPORT_DATE
+      , CRM
+FROM APTTUS_DW.PRODUCT."Monthly_Score_Pipeline_Org"
+group by REPORT_DATE
+      , CRM
+order by 2 desc, 3 
+;
 /*
 --testing
 select * 

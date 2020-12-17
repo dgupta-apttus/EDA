@@ -192,4 +192,24 @@ FROM  choose_current_C1
 GROUP BY ACCOUNTID, CRM, ORG_SOURCE, CUSTOMER_ORG, PRODUCT, PRODUCT_ID
 ;
 
+        SELECT A.APTTUS_CONFIG2__ACCOUNTID__C      AS ACCOUNTID
+             , 'Apttus1.0'                         AS CRM  
+             , A.APTTUS_CONFIG2__PRODUCTID__C      AS PRODUCT_ID
+             , COALESCE(B.FAMILY, 'Unidentified Product') AS PRODUCT
+             , 'SALESFORCE'                        AS ORG_SOURCE    
+             , 'Unknown'                           AS CUSTOMER_ORG               
+             , A.APTTUS_CONFIG2__QUANTITY__C       AS QUANTITY    
+             , (COALESCE(A.ACV__C, 0)/CT.CONVERSIONRATE)::NUMBER(19,2) AS ACV
+             , SUM(ACV) OVER (PARTITION BY A.ACCOUNTID) AS ACV_ON_ACCOUN   
+        FROM                     APTTUS_DW.SNAPSHOTS.ASSETLINEITEM_HISTORY A
+        INNER JOIN               get_current_of_ALI D
+                            ON  A.ID = D.ID
+                            AND A.EXTRACT_DATE = D.EXTRACT_DATE          
+        LEFT OUTER JOIN          APTTUS_DW.SF_PRODUCTION.PRODUCT2 B -- should this be a hist snapshot?
+                            ON A.APTTUS_CONFIG2__PRODUCTID__C = B.ID
+        LEFT OUTER JOIN          APTTUS_DW.SF_PRODUCTION.CURRENCYTYPE  CT -- this is current only
+                            ON A.CURRENCYISOCODE = CT.ISOCODE   
+        WHERE A1_STATUS = 'Activated'
+          AND (SELECT REPORT_DATE FROM SET_DATE_RANGE) BETWEEN START_DATE AND END_DATE 
+
 
