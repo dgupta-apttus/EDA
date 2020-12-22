@@ -187,7 +187,7 @@ CALL APTTUS_DW.PRODUCT.FILL_COLLABORATE_MONTHLY_ACTIVITY('Full'); -- the other o
 -- then run with Manual mode so it uses the control you just created rather than generating a new one
 -- if there are duplicates after your run then something has gone terribly wrong -- figure out which months have duplicates delete and rerun those
 -- a delete statement might look something like 
----- --DELETE from APTTUS_DW.PRODUCT.PIPELINED_MONTHLY_ACTIVITY_TESTING
+---- --DELETE from APTTUS_DW.PRODUCT.PIPELINED_MONTHLY_ACTIVITY
 --   --where  PRODUCT_LINE = 'Conga Collaborate'
 --   --  and ACTIVITY_MONTH_DATE = '2020-09-01      
 CALL APTTUS_DW.PRODUCT.FILL_COLLABORATE_MONTHLY_ACTIVITY('Manual'); 
