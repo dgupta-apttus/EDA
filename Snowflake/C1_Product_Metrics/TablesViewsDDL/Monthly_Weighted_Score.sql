@@ -1,8 +1,8 @@
-
+/*
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT."Monthly_Weigted_Score"
 COMMENT = 'Produce weighted score by ACV
 '
-AS
+AS*/
 with average_score_per_acc_prod as (
         SELECT 	CRM
                 , "Account ID"

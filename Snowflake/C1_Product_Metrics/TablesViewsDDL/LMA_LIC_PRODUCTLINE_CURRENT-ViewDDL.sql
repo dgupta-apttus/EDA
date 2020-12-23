@@ -3,6 +3,7 @@
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT.LMA_LIC_PRODUCTLINE_CURRENT
 COMMENT = 'Compute fields and windows for further License / Productline processing.  Current view
 -- 2020/12/15 switch out old>MASTER_PRODUCT_FAMILY for new>MASTER_PRODUCT_PACKAGE_MAPPING to get product hierarchy fields - GDW
+-- 2020-12/22 suppress negative 1 in seats count when count is coming from the salesforce orgs override 
 '
 AS 
 WITH license_with_orgs_override as (
@@ -60,7 +61,11 @@ WITH license_with_orgs_override as (
                    ELSE 1::BOOLEAN
                   END AS CONGA_ENFORCE_LMA__C
                 , COALESCE(CONGA_ENFORCE_USER_MANAGEMENT__C, 1::BOOLEAN) as CONGA_ENFORCE_USER_MANAGEMENT__C   
-                , B.CONGA_LICENSES__C   
+                , CASE
+                    WHEN B.CONGA_LICENSES__C = -1
+                      THEN NULL
+                   ELSE B.CONGA_LICENSES__C
+                  END AS CONGA_LICENSES__C   
         FROM                               APTTUS_DW.SNAPSHOTS.LMA_LICENSE_C1_CURRENT A
         LEFT OUTER JOIN	                   APTTUS_DW.SF_CONGA1_1.SALESFORCE_ORG__C B 
                           ON A.ID = B.COMPOSER_LICENSE__C 
