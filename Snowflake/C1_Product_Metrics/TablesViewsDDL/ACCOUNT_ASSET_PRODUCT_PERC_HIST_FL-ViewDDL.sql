@@ -21,6 +21,7 @@ FROM APTTUS_DW.PRODUCT.ACCOUNT_ASSET_PRODUCT_PERC_HISTORY
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT.ACCOUNT_ASSET_PRODUCT_PERC_HIST_FL
 COMMENT = 'Add field labels for Percentage of Product Spend per Account
 -- 2020/12/16 adjust to standard product hierarchy - gdw
+-- 2021/01/02 fixed partitions to handle multipl months - gdw
 '
 AS  
 WITH sum_product_c1_pos as (
@@ -68,10 +69,10 @@ WITH sum_product_c1_pos as (
              , ROUND(A.ACV_ON_ACCOUNT, 2)                            AS "Account AVC" 
              , CASE 
                  WHEN B.ACV is not null 
-                   THEN ROUND((B.ACV*100)/(SUM(B.ACV) OVER (PARTITION BY B.ACCOUNTID)), 1)
+                   THEN ROUND((B.ACV*100)/(SUM(B.ACV) OVER (PARTITION BY B.ACCOUNTID, B.REPORT_DATE)), 1)
                 ELSE 0
                END                                                   AS "Product Percentage"
-             , COALESCE(ROUND(SUM(B.ACV) OVER (PARTITION BY B.ACCOUNTID), 2), 0) AS "Positive ACV used for Calculation"  -- this is for precentage calcs only here for check your work
+             , COALESCE(ROUND(SUM(B.ACV) OVER (PARTITION BY B.ACCOUNTID, B.REPORT_DATE), 2), 0) AS "Positive ACV used for Calculation"  -- this is for precentage calcs only here for check your work
              , B.POS_ROWS                                            AS "Items in Positive ACV"
         FROM                    sum_product_c1_all A
         LEFT OUTER JOIN         sum_product_c1_pos B
