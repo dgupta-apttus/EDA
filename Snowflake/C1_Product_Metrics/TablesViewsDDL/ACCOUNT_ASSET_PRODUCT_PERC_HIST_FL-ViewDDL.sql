@@ -22,6 +22,7 @@ CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT.ACCOUNT_ASSET_PRODUCT_PERC_HIST_FL
 COMMENT = 'Add field labels for Percentage of Product Spend per Account
 -- 2020/12/16 adjust to standard product hierarchy - gdw
 -- 2021/01/02 fixed partitions to handle multipl months - gdw
+-- 2021/01/11 exclude support percentages from weighted score - gdw
 '
 AS  
 WITH sum_product_c1_pos as (
@@ -32,6 +33,7 @@ WITH sum_product_c1_pos as (
              , SUM(ACV) AS ACV
              , count(*) AS POS_ROWS 
         FROM  APTTUS_DW.PRODUCT.ACCOUNT_ASSET_PRODUCT_HISTORY   
+        WHERE PRODUCT <> 'Support'        
         GROUP BY ACCOUNTID
                , CRM
                , PRODUCT
@@ -51,6 +53,7 @@ WITH sum_product_c1_pos as (
              , MAX(ACV_ON_ACCOUNT) as ACV_ON_ACCOUNT 
              , count(*) AS ASSET_ITEMS                             
         FROM  APTTUS_DW.PRODUCT.ACCOUNT_ASSET_PRODUCT_HISTORY
+        WHERE PRODUCT <> 'Support'
         GROUP BY ACCOUNTID
                , CRM
                , PRODUCT

@@ -1,70 +1,8 @@
--- APTTUS_DW.SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY source
+-- APTTUS_DW.SF_PRODUCTION.APPANALYTICS_SUMMARY source
+select count(*)
+from APTTUS_DW.PRODUCT.APPANALYTICS_SUMMARY
+;
 
-CREATE VIEW APTTUS_DW.PRODUCT.PRODUCT_APPANALYTICS_SUMMARY 
-COMMENT = 'Product App Analytics Summary Data from a1 and c1
-' 
-AS;
-        SELECT
-                to_date(A."MONTH" || '-' || '01' ) "DATE",
-                B.ACCOUNT_ID AS "Account ID",
-                ORGANIZATION_ID "Subscriber Org ID",
-                A.PACKAGE_ID "Package ID",
-                lower(MANAGED_PACKAGE_NAMESPACE) "Namespace",
-                USER_TYPE "User Type",
-                USER_ID_TOKEN "User ID",
-                lower(CUSTOM_ENTITY) "Entity",
-                lower(CUSTOM_ENTITY_TYPE) "Entity Type",
-                SUM(NUM_CREATES) "Creates",
-                SUM(NUM_DELETES) "Deletes",
-                SUM(NUM_READS) "Reads",
-                SUM(NUM_UPDATES) "Updates",
-                SUM(NUM_VIEWS) "Views",
-                "Subscriber Org ID" || '-' || "Package ID" CK,
-                "Namespace"|| '-' || "Entity Type" || '-' || "Entity" "Entity_CK"
-        FROM                  APTTUS_DW.SF_PRODUCTION.PRODUCTMETRICSDATA_SUMMARY A
-        LEFT OUTER JOIN       APTTUS_DW.PRODUCT.LMA_LIC_PACKAGE_MONTHLY B 
-                          ON    A.ORGANIZATION_ID = B.CUSTOMER_ORG_15
-                          AND A.PACKAGE_ID = B.PACKAGE_ID
-                          AND to_date(A."MONTH" || '-' || '01' ) = B.REPORTING_DATE  
-        GROUP BY
-                to_date(A."MONTH" || '-' || '01' ),
-                B.ACCOUNT_ID, 
-                ORGANIZATION_ID,
-                A.PACKAGE_ID,
-                MANAGED_PACKAGE_NAMESPACE,
-                USER_TYPE,
-                USER_ID_TOKEN ,
-                CUSTOM_ENTITY,
-                CUSTOM_ENTITY_TYPE
-;                
-UNION	
-        SELECT
-                to_date(S."MONTH" || '-' || '01' ) "DATE",
-                ORGANIZATION_ID "Subscriber Org ID",
-                PACKAGE_ID "Package ID",
-                lower(MANAGED_PACKAGE_NAMESPACE) "Namespace",
-                USER_TYPE "User Type",
-                USER_ID_TOKEN "User ID",
-                lower(CUSTOM_ENTITY) "Entity",
-                lower(CUSTOM_ENTITY_TYPE) "Entity Type",
-                SUM(NUM_CREATES) "Creates",
-                SUM(NUM_DELETES) "Deletes",
-                SUM(NUM_READS) "Reads",
-                SUM(NUM_UPDATES) "Updates",
-                SUM(NUM_VIEWS) "Views",
-                "Subscriber Org ID" || '-' || "Package ID" CK,
-                "Namespace"|| '-' || "Entity Type" || '-' || "Entity" "Entity_CK"
-        FROM APTTUS_DW.SF_PRODUCTION.PRODUCTMETRICSDATA_SUMMARY_C1 S
-        GROUP BY
-                to_date(S."MONTH" || '-' || '01' ),
-                ORGANIZATION_ID ,
-                PACKAGE_ID,
-                MANAGED_PACKAGE_NAMESPACE,
-                USER_TYPE,
-                USER_ID_TOKEN ,
-                CUSTOM_ENTITY,
-                CUSTOM_ENTITY_TYPE               
-;	
 
 select * from (
         SELECT

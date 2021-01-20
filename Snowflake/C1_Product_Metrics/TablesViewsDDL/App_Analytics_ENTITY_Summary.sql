@@ -1,3 +1,6 @@
+DROP VIEW APTTUS_DW.PRODUCT.APP_ANALYTICS_ENTITY_SUMMARY;
+
+--this is defunct
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT.APP_ANALYTICS_ENTITY_SUMMARY
 COMMENT = 'build out app analytics summary joined for C1 and A1 Summarized at Org, Package, and Entity
 '
@@ -79,6 +82,7 @@ WITH unionit AS (
                 , (NUM_READS + NUM_ViEWS) AS ACCESS_ACTIVITY
                 , (NUM_CREATES + NUM_UPDATES + NUM_DELETES) AS MANIPULATION_ACTIVITY
                 , (NUM_READS + NUM_VIEWS + NUM_CREATES + NUM_UPDATES + NUM_DELETES) AS MONTHLY_ACTIVITY
+
         FROM                                  totalit A
         LEFT OUTER JOIN                       APTTUS_DW.SF_PRODUCTION."Dates" D
                             ON  A.REPORT_YEAR = D."Calendar_Year"
@@ -86,5 +90,5 @@ WITH unionit AS (
                             AND D."Day" = 1
 ;
 	
-
+                , (NUM_CREATES + NUM_UPDATES + NUM_DELETES +  NUM_VIEWS) AS CUDV_ACTIVITY
 	

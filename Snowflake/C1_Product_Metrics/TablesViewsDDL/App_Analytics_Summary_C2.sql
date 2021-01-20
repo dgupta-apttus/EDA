@@ -1,3 +1,7 @@
+-- this is defunct now replaced
+
+DROP view APTTUS_DW.PRODUCT.APP_ANALYTICS_SUMMARY_C2;
+
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT.APP_ANALYTICS_SUMMARY_C2
 COMMENT = 'build out app analytics summary joined for C1 and A1
 '
