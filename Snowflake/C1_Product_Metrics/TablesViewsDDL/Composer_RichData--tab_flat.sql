@@ -35,7 +35,7 @@ with set_values as (
                 , B.PACKAGE_NAME         
                 , C.ACCOUNT_ID AS "Account ID"
                 , C.ACCOUNT_NAME AS "Account Name on LMA"                
-                , C.PRIMARY_LICENSE_ID AS "License ID"   
+                , COALESCE(C.PRIMARY_LICENSE_ID, 'NOT FOUND') AS "License ID"   
                 , C.LICENSE_NAME AS "License Name"  
                 , COALESCE(C.ACTIVE_SEAT_TYPE, 'Unknown') AS "License Seat Type"
                 , CASE 
@@ -65,8 +65,9 @@ with set_values as (
                 , A.ACCOUNT_ID AS "Account on Activity"
                 , A.ACCOUNT_NAME AS "Account Name on Activity"   
                 , A.MERGE_DATE as "Merge Date"
-                , A.REPORT_DATE as "License Record Date" 
-                , COALESCE(D."Account Name", 'Not Found') as "Account Name" 
+                , A.REPORT_DATE as "Merge Month" 
+                , 1 as "Merge Count"
+                , COALESCE(D."Account Name", 'NOT FOUND') as "Account Name" 
                 , D."Account Type"
                 , D."Geo"
                 , D."Region"
