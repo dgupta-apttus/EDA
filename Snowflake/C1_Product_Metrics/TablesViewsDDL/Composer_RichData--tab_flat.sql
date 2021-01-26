@@ -1,6 +1,6 @@
 -- switch this to a view at some point? or maybe set up daily loads
 Create or replace TABLE APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
-as 
+as ;
 with set_values as (
         SELECT A.*
               , CASE
@@ -21,9 +21,9 @@ with set_values as (
                 , EVENT_TYPE
                 , CASE EVENT_TYPE
                     WHEN 'Workflow' THEN 'Trigger'
-                    WHEN 'PointMerge' THEN 'Button Click'
+                    WHEN 'PointMerge' THEN 'Composer'
                     WHEN 'Conductor' THEN 'Batch'
-                    WHEN 'MassMerge' THEN 'MassMerge'
+                    WHEN 'MassMerge' THEN 'Mail Merge'
                    ELSE 'Other' 
                   END                AS "Event Type" 
                 , A.USER_ID as USER_ID_8
@@ -33,22 +33,22 @@ with set_values as (
                 , B.LMA_PACKAGE_ID
                 , A.PACKAGE_ID 
                 , B.PACKAGE_NAME         
-                , C.ACCOUNT_ID AS "Account ID"
-                , C.ACCOUNT_NAME AS "Account Name on LMA"                
-                , COALESCE(C.PRIMARY_LICENSE_ID, 'NOT FOUND') AS "License ID"   
-                , C.LICENSE_NAME AS "License Name"  
-                , COALESCE(C.ACTIVE_SEAT_TYPE, 'Unknown') AS "License Seat Type"
+                , COALESCE(E.ACCOUNT_ID, A.ACCOUNT_ID) AS "Account ID"
+                , E.ACCOUNT_NAME AS "Account Name on LMA"                
+                , COALESCE(E.LICENSE_ID, 'NOT FOUND') AS "License ID"   
+                , E.LICENSE_NAME AS "License Name"  
+                , COALESCE(E.LICENSE_SEAT_TYPE, 'Unknown') AS "License Seat Type"
                 , CASE 
-                   WHEN C.IS_SANDBOX = false
-                    AND UPPER(C.STATUS) = 'ACTIVE'
-                    AND C.ORG_STATUS IN ('ACTIVE', 'FREE')
+                   WHEN E.IS_SANDBOX = false
+                    AND UPPER(E.STATUS) = 'ACTIVE'
+                    AND E.ORG_STATUS IN ('ACTIVE', 'FREE')
                     THEN 'License Active'
-                   WHEN C.PRIMARY_LICENSE_ID IS NULL
+                   WHEN E.LICENSE_ID IS NULL
                     THEN 'License Not Found'
                    ELSE 'License Not Active'
                   END                                     AS "License Status"    
                 , CASE                      
-                   WHEN C.ACCOUNT_ID IS NOT NULL
+                   WHEN E.ACCOUNT_ID IS NOT NULL
                     THEN ' w/ Acc'
                    ELSE ''
                   END                                     AS "Account Found"   
@@ -58,39 +58,35 @@ with set_values as (
                    ELSE 'Sandbox'  
                   END                                     AS "Activity Type"   
                 ,  "Activity Type" || ' - ' || "License Status" || "Account Found" AS "Status Desciption"                                       
-                , C.STATUS                           AS "LMA Status"
-                , C.ORG_STATUS                       AS "Org Status" 
-                , C.IS_SANDBOX                       AS "Is Sandbox - License" 
+                , E.STATUS                           AS "LMA Status"
+                , E.ORG_STATUS                       AS "Org Status" 
+                , E.IS_SANDBOX                       AS "Is Sandbox - License" 
                 , A.IS_SANDBOX_EDITION               AS "Is Sandbox - Activity" 
                 , A.ACCOUNT_ID AS "Account on Activity"
                 , A.ACCOUNT_NAME AS "Account Name on Activity"   
                 , A.MERGE_DATE as "Merge Date"
                 , A.REPORT_DATE as "Merge Month" 
                 , 1 as "Merge Count"
-                , COALESCE(D."Account Name", 'NOT FOUND') as "Account Name" 
-                , D."Account Type"
-                , D."Geo"
-                , D."Region"
-                , D."Segment"
-                , D."Establishing Partner"
-                , D."Next Renewal"
-                , D."Customer Since"
-                , D."Industry"
-                , D."SIC4"
-                , D."Netsuite ID" 
+                , COALESCE(F."Account Name", 'NOT FOUND') as "Account Name" 
+                , F."Account Type"
+                , F."Geo"
+                , F."Region"
+                , F."Segment"
+                , F."Establishing Partner"
+                , F."Next Renewal"
+                , F."Customer Since"
+                , F."Industry"
+                , F."SIC4"
+                , F."Netsuite ID"                     
         FROM                    set_values A
         LEFT OUTER JOIN         APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_PACKAGE_MAPPING B
                          ON  A.PACKAGE_ID = B.PACKAGE_ID
-        LEFT OUTER JOIN         APTTUS_DW.PRODUCT.LMA_LIC_PACKAGE_MONTHLY C
-                         ON   A.SALESFORCE_ORG_ID = C.CUSTOMER_ORG_18
-                         AND  A.PACKAGE_ID = C.PACKAGE_ID
-                         AND  A.REPORT_DATE = C.REPORTING_DATE  
-        LEFT OUTER JOIN         APTTUS_DW.SF_PRODUCTION."Account_C2_FL" D
-                         ON C.ACCOUNT_ID = D."Account ID" 
--- User ids are from the external Salesforce Orgs,  these are not user IDs in our system
--- so joining to user does not return anything 
---        LEFT OUTER JOIN         APTTUS_DW.SF_CONGA1_1."USER" E  
---                         ON A.USER_ID_ALL = E.ID                                        
+        LEFT OUTER JOIN         APTTUS_DW.PRODUCT.LMA_LIC_PRODUCTLINE_CURRENT E
+                         ON   A.SALESFORCE_ORG_ID = E.CUSTOMER_ORG_18
+                         AND  A.PACKAGE_ID = E.PACKAGE_ID  
+                         AND  E.SELECT1_FOR_PACKAGE_ID = 1              
+        LEFT OUTER JOIN         APTTUS_DW.SF_PRODUCTION."Account_C2_FL" F
+                         ON E.ACCOUNT_ID = F."Account ID"                                      
 ;
 
 select  "LMA Status"
@@ -124,4 +120,21 @@ from APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
                    ELSE 'Other' 
                   END                AS "Event Type" 
  from APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
-;                 
+;  
+
+SELECT MAX(MERGE_TIMESTAMP) from    APTTUS_DW.SF_PRODUCTION.COMPOSER_MERGE_EVENT_LOAD
+;     
+SELECT "Merge Date", SALESFORCE_ORG_ID 
+ from APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT  
+WHERE "Account Name" like 'Altu%' 
+order by 1 desc; 
+
+SELECT "Merge Date"
+ from APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
+WHERE SALESFORCE_ORG_ID IN ('00D41000000doeEEAQ')    
+;
+
+Select CUSTOMER_ORG_18
+from APTTUS_DW.PRODUCT.LMA_LIC_PRODUCTLINE_CURRENT
+where CRM_SOURCE = 'Apttus1.0'
+;
