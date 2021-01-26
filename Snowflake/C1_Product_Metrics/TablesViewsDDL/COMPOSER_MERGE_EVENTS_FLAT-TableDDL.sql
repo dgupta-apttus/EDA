@@ -1,5 +1,3 @@
--- THIS IS THE EXPERIMENTAL VERSION SEE COMPOSER_MERGE_EVENTS_FLAT-TableDDL.sql for the premenant version
-
 -- switch this to a view at some point? or maybe set up daily loads
 Create or replace TABLE APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
 as  
