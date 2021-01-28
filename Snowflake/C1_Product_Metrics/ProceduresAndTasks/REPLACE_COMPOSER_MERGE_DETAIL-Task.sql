@@ -1,6 +1,15 @@
--- switch this to a view at some point? or maybe set up daily loads
-Create or replace TABLE APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
-as  
+create or replace procedure APTTUS_DW.PRODUCT.REPLACE_COMPOSER_MERGE_DETAIL()
+    returns string
+    language javascript
+    strict
+    as
+    $$
+    var procname = "REPLACE_COMPOSER_MERGE_DETAIL"  
+    var truncate = `
+TRUNCATE TABLE IF EXISTS APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
+`
+    var sql_command = `
+INSERT INTO APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT 
 with set_values as (
         SELECT A.*
               , CASE
@@ -84,67 +93,65 @@ with set_values as (
                          AND  A.PACKAGE_ID = E.PACKAGE_ID  
                          AND  E.SELECT1_FOR_PACKAGE_ID = 1              
         LEFT OUTER JOIN         APTTUS_DW.SF_PRODUCTION."Account_C2_FL" F
-                         ON E.ACCOUNT_ID = F."Account ID"  
--- join to package mapping not necessary unless you need the product Hierarchy                                                          
---        LEFT OUTER JOIN         APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_PACKAGE_MAPPING B
---                         ON  A.PACKAGE_ID = B.PACKAGE_ID
-;
+                         ON E.ACCOUNT_ID = F."Account ID" 
+`
+    var stepname = "Truncate COMPOSER_MERGE_EVENTS_FLAT" 
+    try {
+        snowflake.execute (
+             {sqlText: truncate}
+             );
+	         return_value = "Succeeded.";   // Return a success/error indicator.
+	         snowflake.execute({
+	                    sqlText: `insert into APTTUS_DW.PRODUCT.ACTIVITY_LOG (procedure_name, step_name) VALUES (?,?)`
+	                    ,binds: [procname, stepname]
+	                    });
+        }     
+    catch (err)  {
+                var errorstr = err.message.replace(/\n/g, " ")
+                return_value = "Failed: " + errorstr + " Code: " + err.code + " State: " + err.state;
+                snowflake.execute({
+                    sqlText: `insert into APTTUS_DW.PRODUCT.ACTIVITY_LOG VALUES (?,?,?,?,?,?,current_user(),CONVERT_TIMEZONE('UTC',current_timestamp()))`
+                    ,binds: [procname, stepname, err.code, err.state, errorstr, err.stackTraceTxt]
+                    });
+            };
+    var stepname = "Reload COMPOSER_MERGE_EVENTS_FLAT" 
+    try {
+        snowflake.execute (
+            {sqlText: sql_command}
+            );
+         return_value = "Succeeded.";   // Return a success/error indicator.
+         snowflake.execute({
+                    sqlText: `insert into APTTUS_DW.PRODUCT.ACTIVITY_LOG (procedure_name, step_name) VALUES (?,?)`
+                    ,binds: [procname, stepname]
+                    });         
+        }
+    catch (err)  {
+                var errorstr = err.message.replace(/\n/g, " ")
+                return_value = "Failed: " + errorstr + " Code: " + err.code + " State: " + err.state;
+                snowflake.execute({
+                    sqlText: `insert into APTTUS_DW.PRODUCT.ACTIVITY_LOG VALUES (?,?,?,?,?,?,current_user(),CONVERT_TIMEZONE('UTC',current_timestamp()))`
+                    ,binds: [procname, stepname, err.code, err.state, errorstr, err.stackTraceTxt]
+                    });
+            };
 
-select  "LMA Status"
-       , "Org Status" 
-       , "Is Sandbox - License" 
-       , "Is Sandbox - Activity"       
-       , count(*) 
-from APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
-group by "LMA Status"
-       , "Org Status" 
-       , "Is Sandbox - License" 
-       , "Is Sandbox - Activity"       
-;
+    return return_value;
+    $$
+    ;       
+       
+DESCRIBE procedure APTTUS_DW.PRODUCT.REPLACE_COMPOSER_MERGE_DETAIL();
+--how to call example
+CALL APTTUS_DW.PRODUCT.REPLACE_COMPOSER_MERGE_DETAIL();       
+       
+CREATE OR REPLACE TASK APTTUS_DW.PRODUCT.REPLACE_COMPOSER_MERGE_DETAIL
+  WAREHOUSE = APTTUS_ADMIN
+  SCHEDULE = 'USING CRON 20 15 * * * America/Los_Angeles' -- 1:38 am UTC time
+AS CALL APTTUS_DW.PRODUCT.REPLACE_COMPOSER_MERGE_DETAIL()
+; 
+ 
+DESCRIBE task APTTUS_DW.PRODUCT.REPLACE_COMPOSER_MERGE_DETAIL;
+alter task APTTUS_DW.PRODUCT.REPLACE_COMPOSER_MERGE_DETAIL suspend; --resume
+alter task APTTUS_DW.PRODUCT.REPLACE_COMPOSER_MERGE_DETAIL resume;
 
-select A.LMA_PACKAGE_ID, A.PACKAGE_NAME, B.PACKAGE_ID_AA, B.PACKAGE_NAME
-from APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT A
-INNEr join APTTUS_DW.PRODUCT.LMA_LIC_PRODUCTLINE_CURRENT B
-            ON A.LMA_PACKAGE_ID = B.PACKAGE_ID_AA
-where A.LMA_PACKAGE_ID is not null
-;
+show tasks IN SCHEMA PRODUCT;
+SHOW procedures IN SCHEMA PRODUCT;
 
-
-
-select
-        "Status Desciption" 
-       , count(*) 
-from APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
-group by "Status Desciption"  
-;
-
-SELECT distinct EVENT_TYPE
-from APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
-;
-
- select CASE EVENT_TYPE
-                    WHEN 'Workflow' THEN 'Trigger'
-                    WHEN 'PointMerge' THEN 'Button Click'
-                    WHEN 'Conductor' THEN 'Batch'
-                    WHEN 'MassMerge' THEN 'MassMerge'
-                   ELSE 'Other' 
-                  END                AS "Event Type" 
- from APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
-;  
-
-SELECT MAX(MERGE_TIMESTAMP) from    APTTUS_DW.SF_PRODUCTION.COMPOSER_MERGE_EVENT_LOAD
-;     
-SELECT "Merge Date", SALESFORCE_ORG_ID 
- from APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT  
-WHERE "Account Name" like 'Altu%' 
-order by 1 desc; 
-
-SELECT "Merge Date"
- from APTTUS_DW.PRODUCT.COMPOSER_MERGE_EVENTS_FLAT
-WHERE SALESFORCE_ORG_ID IN ('00D41000000doeEEAQ')    
-;
-
-Select CUSTOMER_ORG_18
-from APTTUS_DW.PRODUCT.LMA_LIC_PRODUCTLINE_CURRENT
-where CRM_SOURCE = 'Apttus1.0'
-;
