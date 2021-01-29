@@ -2,21 +2,24 @@ CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT."License_Monthly_History"
 COMMENT = 'Month by month veiw of license and user counts
 -- 2020/12/16 switching old> Master_Package_List for NEW> MASTER_PRODUCT_PACKAGE_MAPPING as Package_id lookup -- gdw
 -- 2020/12/22 adding CRM attribute to License Name and adding the composite License status -- gdw 
+-- 2021/01/28 switch to standard PRODUCT.APPANALYTICS_SUMMARY from SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY -- gdw
 '
-AS  
+AS   
 WITH A1_MAU as (
         select 
-              'Apttus1.0' as CRM_SOURCE
+               CRM_SOURCE
              , "Subscriber Org ID" AS CUSTOMER_ORG
              , "Package ID" as LMA_PACKAGE_ID
              , "DATE" as ACTIVITY_MONTH_DATE
              , count(distinct "User ID") AS MONTHLY_UNIQUE_USERS   
              , (select MAX(PACKAGEID) FROM APTTUS_DW.PRODUCT."Master_Package_List" WHERE LMA_PACKAGE_ID = A."Package ID"
                ) AS PACKAGE_ID -- PACKAGE_ID_AA is the one used for App Analytics          
-        FROM APTTUS_DW.SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY A
+        FROM APTTUS_DW.PRODUCT.APPANALYTICS_SUMMARY A
+        WHERE CRM_SOURCE = 'Apttus1.0'
         GROUP BY "Subscriber Org ID"
                 , "Package ID" 
                 , "DATE"
+                , CRM_SOURCE
 )
         SELECT
                A.ACCOUNT_ID AS "Account ID"
@@ -128,71 +131,7 @@ WITH A1_MAU as (
                           AND A.REPORTING_DATE = D.ACTIVITY_MONTH_DATE
         LEFT OUTER JOIN           APTTUS_DW.SF_PRODUCTION."Account_C2" C
                           ON  UPPER(A.CRM_SOURCE) = UPPER(C.SOURCE)
-                          AND A.ACCOUNT_ID = C.ACCOUNTID_18__C                          
-;        
+                          AND A.ACCOUNT_ID = C.ACCOUNTID_18__C;
+                          
 
-select count(*) from  APTTUS_DW.PRODUCT."License_Monthly_History";
-/*
-with temp as (
-        select 
-              'Apttus1.0' as CRM_SOURCE
-             , "Subscriber Org ID" AS CUSTOMER_ORG
-             , "Package ID" as LMA_PACKAGE_ID
-             , "DATE" as ACTIVITY_MONTH_DATE
-             , count(distinct "User ID") AS MONTHLY_UNIQUE_USERS   
-             , (select MAX(PACKAGE_ID) FROM APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_PACKAGE_MAPPING WHERE LMA_PACKAGE_ID = A."Package ID"
-               ) AS PACKAGE_ID -- PACKAGE_ID_AA is the one used for App Analytics          
-        FROM APTTUS_DW.SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY A
-        GROUP BY "Subscriber Org ID"
-                , "Package ID" 
-                , "DATE"
-)
-select * from temp
-order by 2
-
-;
-
-with temp as (
-        select 
-              'Apttus1.0' as CRM_SOURCE
-             , "Subscriber Org ID" AS CUSTOMER_ORG
-             , "Package ID" as LMA_PACKAGE_ID
-             , "DATE" as ACTIVITY_MONTH_DATE
-             , count(distinct "User ID") AS MONTHLY_UNIQUE_USERS   
-             , (select MAX(PACKAGEID) FROM APTTUS_DW.PRODUCT."Master_Package_List" WHERE LMA_PACKAGE_ID = A."Package ID"
-               ) AS PACKAGE_ID -- PACKAGE_ID_AA is the one used for App Analytics          
-        FROM APTTUS_DW.SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY A
-        GROUP BY "Subscriber Org ID"
-                , "Package ID" 
-                , "DATE"
-)
-select * from temp
-order by 2
-;
-*/     
-/* test counts
-select count(*), sum("Unique Users") from APTTUS_DW.PRODUCT."License_Monthly_History"; 
-*/
-/* this code is directly in PRODUCT.MONTHLY_ACTIVITY now
-WITH ADD_PACKAGE_C1 AS (
-;        SELECT
-               CRM_SOURCE
-             , ORG_SOURCE
-             , SOURCE_ORG_ID
-             , A.PRODUCT_LINE
-             , A.PACKAGE_NAMESPACE
-             , CASE
-                 WHEN UPPER(A.PACKAGE_NAMESPACE) in ('APXTCONGA4','APXTCFQ','CSFB')
-                   THEN (SELECT MAX(PACKAGE_ID) FROM APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE_C2 WHERE MANAGED_PACKAGE_NAMESPACE = UPPER(A.PACKAGE_NAMESPACE))                  
-                 WHEN A.PRODUCT_LINE NOT IN ('Conga Composer', 'Conga Contracts', 'Conga Collaborate')
-                   THEN (SELECT MAX(PACKAGE_ID) FROM APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE_C2 WHERE PRODUCT_LINE = A.PRODUCT_LINE) 
-                ELSE 'NO LMA PACKAGE'
-               END AS PACKAGE_ID    
-             , PACKAGE_ID    
-             , UNIQUE_USERS AS MONTHLY_UNIQUE_USERS
-             , PERCENT_SERVICE_EVENTS
-             , ACTIVITY_MONTH_DATE
-        FROM             APTTUS_DW.PRODUCT.MONTHLY_ACTIVITY A
-;)
-*/
 
