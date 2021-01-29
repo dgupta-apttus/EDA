@@ -1,0 +1,16 @@
+
+The Weighted Adoption Score takes the current average adoption score for each product and multiplies it by the percentage represented in the ACV by Product(Assets) excluding 'Support' ACV.
+
+The Activity Component compares an activity count for the most recently completed month against the activity in the prior 3 months.
+A score of 100 means there has been no decline in activity. Anything less than 100 means the current month is some percentage of the average of the prior three months.  If multiple products, orgs, or licenses are included in the filter criteria, then the values are averaged without any weighting to give a composite activity score. 
+
+The User Component compares a Monthly Active User (MAU) count for the most recently completed month against the MAU in the prior 3 months. A score of 100 means there has been no decline in MAU. Anything less than 100 means the current month is some percentage of the average of the prior three months.  If multiple products, orgs, or licenses are included in the filter criteria, then the values are averaged without any weighting to give a composite Monthly Active User score. 
+
+The Assigned Ratio applies to Seat Licenses (when the LMA identifies a seat license)*. It is the percentage of Seats Assigned to Purchased Seats for each license.  Assigned seats are those that have been linked with a Named User.  When multiple seat licenses are included in the selection criteria the values will be averaged.             
+*The Asset record sometimes indicates a Seat Count when the LMA indicates a Site license.  Seat counts on the Assets are not part of this formula currently. 
+
+The Usage Ratio applies to Seat Licenses*. It is the percentage of current Monthly Active Users (MAU) to the number of Assigned Seats. When multiple seat licenses are included in the selection criteria the values will be averaged.    
+
+Automation only applies to the Composer product line currently.  This is a percentage of merges completed by batch processes. 
+
+This is Version 1 of the Adoption Score. This is the same formula that has traditionaly been used for the C1 products as presented in Einstein Dashboards. There are TWO formulas for Adoption Score depending on whether the LMA* identifies a Seat or Site license.  For Site licenses: 40% of the score is the Activity Component, 35% of the score is the User component, and 25% score represents the amount of time that has passed since the last active user.  For LMA Seat licenses: 40% of the score is the Activity Component, 25% of the score is the Assigned Ratio, and 35% of the score is the usage ratio.  All components of the score are capped at 100%.  If multiple products, orgs, or licenses are included in the filter criteria, then the values are averaged without any weighting to give a composite Adoption Score. If multiple products, orgs, or licenses are included in the filter criteria, then the values are averaged without any weighting to give a composite Adoption Score. See the Weighted Score page to see the scores weighted by ACV across the selected Account.    

@@ -1,5 +1,8 @@
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT."License_Monthly_History"
-COMMENT = 'Month by month veiw of license and user counts'
+COMMENT = 'Month by month veiw of license and user counts
+-- 2020/12/16 switching old> Master_Package_List for NEW> MASTER_PRODUCT_PACKAGE_MAPPING as Package_id lookup -- gdw
+-- 2020/12/22 adding CRM attribute to License Name and adding the composite License status -- gdw 
+'
 AS  
 WITH A1_MAU as (
         select 
@@ -8,7 +11,7 @@ WITH A1_MAU as (
              , "Package ID" as LMA_PACKAGE_ID
              , "DATE" as ACTIVITY_MONTH_DATE
              , count(distinct "User ID") AS MONTHLY_UNIQUE_USERS   
-             , (select MAX(PACKAGE_ID) FROM APTTUS_DW.PRODUCT.LICENSE_PACKAGE_PRODUCT_LINE_C2 WHERE LMA_PACKAGE_ID = A."Package ID"
+             , (select MAX(PACKAGEID) FROM APTTUS_DW.PRODUCT."Master_Package_List" WHERE LMA_PACKAGE_ID = A."Package ID"
                ) AS PACKAGE_ID -- PACKAGE_ID_AA is the one used for App Analytics          
         FROM APTTUS_DW.SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY A
         GROUP BY "Subscriber Org ID"
@@ -36,7 +39,7 @@ WITH A1_MAU as (
              , A.INSTALL_DATE_STRING AS "Install Text"
              , A.LAST_ACTIVITY_DATE AS "Last Activity"             
              , A.PRIMARY_LICENSE_ID AS "License ID"   
-             , A.LICENSE_NAME AS "License Name"       
+             , A.LICENSE_NAME || '-' || SUBSTR(A.CRM_SOURCE, 1, 1)  AS "License Name"   
              , A.ACTIVE_SEAT_TYPE AS "License Seat Type"        
                   
              , A.PACKAGE_ID AS "Package ID"
@@ -52,6 +55,25 @@ WITH A1_MAU as (
              , A.SANDBOX_SEATS AS "Seats Sandbox"
 
              , COALESCE(B.PERCENT_SERVICE_EVENTS, 0)::INTEGER AS "Service Events Percentage"
+             , CASE 
+                  WHEN A.IS_SANDBOX = true
+                    THEN 'Sandbox'
+                  WHEN A.IS_SANDBOX = false
+                   AND (UPPER(A.STATUS) <> 'ACTIVE'
+                        OR A.ORG_STATUS NOT IN ('ACTIVE', 'FREE', 'SIGNING_UP')
+                       )
+                    THEN 'Not Production'
+                  WHEN UPPER(A.STATUS) = 'ACTIVE'
+                   AND A.ORG_STATUS IN ('ACTIVE', 'FREE', 'SIGNING_UP')
+                   AND A.IS_SANDBOX = false
+                   AND A.ACCOUNT_ID is null
+                    THEN 'Active w/o Acc'
+                  WHEN UPPER(A.STATUS) = 'ACTIVE'
+                   AND A.ORG_STATUS IN ('ACTIVE', 'FREE', 'SIGNING_UP')
+                   AND A.IS_SANDBOX = false
+                    THEN 'Active'                     
+                 ELSE 'Unknown'
+               END                              AS "License Status"  
              , A.IS_SANDBOX AS "Status - Sandbox"
              , A.STATUS AS "Status - License"
              , A.ORG_STATUS AS "Status - Org"   
@@ -108,7 +130,46 @@ WITH A1_MAU as (
                           ON  UPPER(A.CRM_SOURCE) = UPPER(C.SOURCE)
                           AND A.ACCOUNT_ID = C.ACCOUNTID_18__C                          
 ;        
-     
+
+select count(*) from  APTTUS_DW.PRODUCT."License_Monthly_History";
+/*
+with temp as (
+        select 
+              'Apttus1.0' as CRM_SOURCE
+             , "Subscriber Org ID" AS CUSTOMER_ORG
+             , "Package ID" as LMA_PACKAGE_ID
+             , "DATE" as ACTIVITY_MONTH_DATE
+             , count(distinct "User ID") AS MONTHLY_UNIQUE_USERS   
+             , (select MAX(PACKAGE_ID) FROM APTTUS_DW.SF_PRODUCTION.MASTER_PRODUCT_PACKAGE_MAPPING WHERE LMA_PACKAGE_ID = A."Package ID"
+               ) AS PACKAGE_ID -- PACKAGE_ID_AA is the one used for App Analytics          
+        FROM APTTUS_DW.SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY A
+        GROUP BY "Subscriber Org ID"
+                , "Package ID" 
+                , "DATE"
+)
+select * from temp
+order by 2
+
+;
+
+with temp as (
+        select 
+              'Apttus1.0' as CRM_SOURCE
+             , "Subscriber Org ID" AS CUSTOMER_ORG
+             , "Package ID" as LMA_PACKAGE_ID
+             , "DATE" as ACTIVITY_MONTH_DATE
+             , count(distinct "User ID") AS MONTHLY_UNIQUE_USERS   
+             , (select MAX(PACKAGEID) FROM APTTUS_DW.PRODUCT."Master_Package_List" WHERE LMA_PACKAGE_ID = A."Package ID"
+               ) AS PACKAGE_ID -- PACKAGE_ID_AA is the one used for App Analytics          
+        FROM APTTUS_DW.SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY A
+        GROUP BY "Subscriber Org ID"
+                , "Package ID" 
+                , "DATE"
+)
+select * from temp
+order by 2
+;
+*/     
 /* test counts
 select count(*), sum("Unique Users") from APTTUS_DW.PRODUCT."License_Monthly_History"; 
 */

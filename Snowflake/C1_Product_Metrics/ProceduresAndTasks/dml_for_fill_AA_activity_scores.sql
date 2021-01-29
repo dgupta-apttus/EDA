@@ -135,11 +135,15 @@ WITH CONTROL_LAST AS (
              , COALESCE(A.MONTHLY_ACTIVITY, 0) AS ACT
              , COALESCE(B.PRIOR3_ACTIVITY, 0) AS PRIOR3_ACTIVITY
              , CASE WHEN B.PRIOR3_ACTIVITY > 0
-                 THEN COALESCE((A.MONTHLY_ACTIVITY-B.PRIOR3_ACTIVITY)/B.PRIOR3_ACTIVITY, 0)
+                 THEN COALESCE((ACT-B.PRIOR3_ACTIVITY)/B.PRIOR3_ACTIVITY, 0)
+                    WHEN ACT > 0
+                 THEN 1   
                 ELSE 0  
                END AS ACTIVITY_P3_INTERVAL
              , CASE WHEN B.PRIOR3_ACTIVITY > 0
                  THEN COALESCE(A.MONTHLY_ACTIVITY/B.PRIOR3_ACTIVITY, 0)
+                    WHEN A.MONTHLY_ACTIVITY > 0
+                 THEN 1   
                 ELSE 0  
                END AS ACTIVITY_P3_INTERVAL2               
              , CASE
@@ -211,10 +215,14 @@ WITH CONTROL_LAST AS (
              , COALESCE(B.PRIOR3_USERS, 0) AS PRIOR3_USERS
              , CASE WHEN B.PRIOR3_USERS > 0
                  THEN COALESCE((UUSR-B.PRIOR3_USERS)/B.PRIOR3_USERS, 0)
+                    WHEN UUSR > 0
+                 THEN 1   
                 ELSE 0  
                END AS USER_P3_INTERVAL
              , CASE WHEN B.PRIOR3_USERS > 0
                  THEN COALESCE(UUSR/B.PRIOR3_USERS, 0)
+                    WHEN UUSR > 0
+                 THEN 1   
                 ELSE 0  
                END AS USER_P3_INTERVAL2
              , CASE
@@ -307,7 +315,6 @@ WITH CONTROL_LAST AS (
                          AND L.ORGANIZATION_ID = P12.ORGANIZATION_ID                        
         WHERE L.LAST_ACTIVITY_MONTH >= (SELECT LAST_ACT_LIMIT FROM SET_DATE_RANGE)                                                              
 )
---, tempInner as (
         SELECT CRM
              , ORGANIZATION_ID  
              , REPORT_YEAR
@@ -349,7 +356,6 @@ WITH CONTROL_LAST AS (
 , USERS_RANGE_CENTER -- delete later             
              , ROUND(USERS_RANGE_SCORE, 3) as USERS_RANGE_SCORE             
              , TOTAL_MONTHS_OF_ACTIVITY
-        FROM JOINS_CALCS
---)
---select count(*) from tempInner = 9256
+        FROM JOINS_CALCS       
+
 ;        

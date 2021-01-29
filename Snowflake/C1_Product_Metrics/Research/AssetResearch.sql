@@ -1,0 +1,225 @@
+-- APTTUS_DW.SF_PRODUCTION."Asset_C2" source
+--CREATE OR REPLACE VIEW "Asset_C2"  COMMENT = 'all purpose Asset view for Blended Conga2.0' AS 
+
+SELECT 'Conga1.0' as SOURCE
+       , ACCOUNTID 
+       , ACCOUNT_NAME    
+       , ASSET_NAME 
+       , ENTITLEMENT_STATUS AS C1_STATUS
+       , null               AS A1_STATUS 
+       , PRODUCT_FAMILY__C 
+       , OWNERID 
+       , ACV AS ACV_IN_CURRENCY
+       , ACV
+       , DESCRIPTION 
+       , RECORD_TYPE 
+       , START_DATE 
+       , END_DATE 
+       , PRICE AS PRICE_IN_CURRENCY
+       , PRICE 
+       , QUANTITY 
+       , ACCOUNTING_STAGE    
+       , CREATEDDATE 
+       , CREATEDBYID
+       , LASTMODIFIEDBYID 
+       , LASTMODIFIEDDATE         
+       , OPPTY_RECORD_TYPE 
+       , SALES_OPS_APPROVED 
+       , PRODUCT_NAME 
+       , PRODUCT_LINE__C 
+       , null as LIST_PRICE_IN_CURRENCY
+       , null as LIST_PRICE
+FROM   APTTUS_DW.SF_CONGA1_1."Asset_C1"
+UNION
+SELECT 'Apttus1.0' as SOURCE
+       , ACCOUNTID 
+       , ACCOUNT_NAME 
+       , ASSET_NAME 
+       , NULL as C1_STATUS
+       , ASSET_STATUS as A1_STATUS 
+       , PRODUCT_FAMILY__C 
+       , OWNERID 
+       , ACV_IN_CURRENCY
+       , ACV
+       , DESCRIPTION 
+       , RECORD_TYPE 
+       , APTTUS_CONFIG2__STARTDATE__C AS START_DATE
+       , APTTUS_CONFIG2__ENDDATE__C  AS END_DATE
+       , NET_UNIT_PRICE_IN_CURRENCY
+       , NET_UNIT_PRICE
+       , APTTUS_CONFIG2__QUANTITY__C 
+       , ACCOUNTING_STAGE 
+       , CREATEDDATE 
+       , CREATEDBYID 
+       , LASTMODIFIEDBYID 
+       , LASTMODIFIEDDATE   
+       , null as OPPTY_RECORD_TYPE 
+       , null as SALES_OPS_APPROVED 
+       , null as PRODUCT_NAME 
+       , null as PRODUCT_LINE__C  
+       , LIST_PRICE_IN_CURRENCY
+       , LIST_PRICE
+FROM   APTTUS_DW.SF_PRODUCTION."Asset_A1"
+;
+
+-- APTTUS_DW.SF_CONGA1_1."Asset_C1" source
+--CREATE OR REPLACE VIEW "Asset_C1"  COMMENT = 'all purpose Conga1.0 Asset view' AS 
+SELECT        
+         A.ACCOUNTID              AS ACCOUNTID
+       , A.NAME                   AS ASSET_NAME
+       , A.ACCOUNTING_STAGE__C    AS Accounting_Stage
+       , A.CREATEDDATE            AS CREATEDDATE
+       , A.CREATEDBYID            AS CREATEDBYID
+       , A.ENTITLEMENT_STATUS__C  AS Entitlement_Status
+       , A.PRODUCT_FAMILY__C      AS PRODUCT_FAMILY__C
+       , A.OWNERID                AS OWNERID
+       , A.MRR_ASSET_MRR__C * 12  AS ACV
+       , A.DESCRIPTION            AS DESCRIPTION
+       , A.LASTMODIFIEDBYID       
+       , A.LASTMODIFIEDDATE       
+       , A.OPPTY_RECORD_TYPE__C   AS Record_Type
+       , A.START_DATE__C          AS START_DATE
+       , A.END_DATE__C            AS END_DATE
+       , A.PRICE		          AS PRICE
+       , A.QUANTITY               AS QUANTITY
+       , A.OPPTY_RECORD_TYPE__C   AS OPPTY_RECORD_TYPE
+       , A.SALES_OPS_APPROVED__C  AS SALES_OPS_APPROVED
+       , A.PRODUCT2ID             AS PRODUCT2ID
+       , B.NAME                   AS PRODUCT_NAME
+       , B.PRODUCT_LINE__C   
+       , C.ACCOUNT_NAME           AS ACCOUNT_NAME       
+   FROM                           apttus_dw.SF_CONGA1_1.asset A
+   LEFT OUTER JOIN                APTTUS_DW.SF_CONGA1_1.PRODUCT2 B
+                          ON  A.PRODUCT2ID = B.ID
+   LEFT OUTER JOIN                APTTUS_DW.SF_CONGA1_1."Account_C1" C
+                          ON  A.ACCOUNTID = C.ACCOUNTID_18__C
+;
+                         
+-- APTTUS_DW.SF_PRODUCTION."Asset_A1" source
+--CREATE OR REPLACE VIEW "Asset_A1"  COMMENT = 'all purpose APTTUS1.0 Asset view' AS 
+SELECT 
+      A.APTTUS_CONFIG2__ACCOUNTID__C      AS ACCOUNTID
+    , A.NAME                              AS ASSET_NAME
+    , NULL                                AS ACCOUNTING_STAGE
+    , A.CREATEDDATE
+    , A.CREATEDBYID
+    , A.APTTUS_CONFIG2__ASSETSTATUS__C    AS ASSET_STATUS
+    , A.PRODUCT_FAMILY__C                 AS PRODUCT_FAMILY__C 
+    , A.OWNERID                           AS OWNERID
+    , A.APTTUS_CONFIG2__DESCRIPTION__C    AS DESCRIPTION
+    , A.LASTMODIFIEDBYID
+    , A.LASTMODIFIEDDATE
+    , NULL                               AS RECORD_TYPE
+    , A.APTTUS_CONFIG2__STARTDATE__C
+    , A.APTTUS_CONFIG2__ENDDATE__C
+    , A.CURRENCYISOCODE                   AS CURRENCY
+    , COALESCE(A.ACV__C, 0)::NUMBER(19,2) AS ACV_IN_CURRENCY
+    , (COALESCE(A.ACV__C, 0)/CT.CONVERSIONRATE)::NUMBER(19,2) AS ACV
+    , COALESCE(A.APTTUS_CONFIG2__NETUNITPRICE__C, 0)::NUMBER(19,2) AS NET_UNIT_PRICE_IN_CURRENCY
+    , (COALESCE(A.APTTUS_CONFIG2__NETUNITPRICE__C, 0)/CT.CONVERSIONRATE)::NUMBER(19,2) AS NET_UNIT_PRICE
+    , A.APTTUS_CONFIG2__QUANTITY__C
+    , COALESCE(A.APTTUS_CONFIG2__LISTPRICE__C,0)::NUMBER(19,2) AS LIST_PRICE_IN_CURRENCY
+    , (COALESCE(A.APTTUS_CONFIG2__LISTPRICE__C, 0)/CT.CONVERSIONRATE)::NUMBER(19, 2) AS LIST_PRICE
+    , B.ACCOUNT_NAME			         
+FROM                                     APTTUS_DW.SF_PRODUCTION.APTTUS_CONFIG2__ASSETLINEITEM__C A
+LEFT OUTER JOIN                          APTTUS_DW.SF_PRODUCTION."Account_A1" B
+                                     ON  A.APTTUS_CONFIG2__ACCOUNTID__C = B.ACCOUNTID_18
+LEFT OUTER JOIN APTTUS_DW.SF_PRODUCTION.CURRENCYTYPE  CT
+                                     ON A.CURRENCYISOCODE = CT.ISOCODE
+;                         
+                          
+-- APTTUS_DW.SF_PRODUCTION."Asset_Account_C2_V2" source
+--CREATE OR REPLACE VIEW "Asset_Account_C2_V2"  COMMENT = 'all purpose Conga2.0 Account_Asset view'
+-- 9/25 Ryan -- created a sub query off of Asset_Account_C2
+--AS
+WITH FILTER_ASSETS  AS (
+SELECT
+	A."SOURCE",
+	A.ACCOUNTID,
+	A.ACCOUNT_NAME,
+	A.ASSET_NAME,
+	--C1_STATUS,
+	--A1_STATUS,
+	CASE 
+	    WHEN C1_STATUS = 'Active'
+	        THEN 'Active'
+	    WHEN  A1_STATUS = 'Activated'
+	        THEN 'Active'
+	END  AS STATUS,  
+   	A.PRODUCT_FAMILY__C,
+	A.OWNERID,
+	A.ACV,
+    SUM(A.ACV) OVER (PARTITION BY A.ACCOUNTID) AS ACV_ON_ACCOUNT,
+	A.DESCRIPTION,
+	A.RECORD_TYPE,
+	A.START_DATE,
+	A.END_DATE,
+	A.PRICE,
+	A.QUANTITY,
+	A.ACCOUNTING_STAGE,
+	A.CREATEDDATE,
+	A.CREATEDBYID,
+	A.LASTMODIFIEDBYID,
+	A.LASTMODIFIEDDATE,
+	A.OPPTY_RECORD_TYPE,
+	A.SALES_OPS_APPROVED,
+	A.PRODUCT_NAME,
+	A.PRODUCT_LINE__C,
+    A.LIST_PRICE
+FROM APTTUS_DW.SF_PRODUCTION."Asset_C2" A
+WHERE (C1_STATUS = 'Active')
+OR    (A1_STATUS = 'Activated'
+      AND CURRENT_DATE() BETWEEN START_DATE AND END_DATE 
+      )
+)
+SELECT     
+    B."SOURCE",
+	B.ACCOUNTID_18__C,
+	B.ACCOUNT_NAME,
+	A.ASSET_NAME,
+	A.STATUS,  
+   	A.PRODUCT_FAMILY__C,
+	A.OWNERID,
+	A.ACV,
+    A.ACV_ON_ACCOUNT,
+	A.DESCRIPTION,
+	A.RECORD_TYPE,
+	A.START_DATE,
+	A.END_DATE,
+	A.PRICE,
+	A.QUANTITY,
+	A.ACCOUNTING_STAGE,
+	A.CREATEDDATE,
+	A.CREATEDBYID,
+	A.LASTMODIFIEDBYID,
+	A.LASTMODIFIEDDATE,
+	A.OPPTY_RECORD_TYPE,
+	A.SALES_OPS_APPROVED,
+	A.PRODUCT_NAME,
+	A.PRODUCT_LINE__C,
+    A.LIST_PRICE,
+    B.TYPE,
+    B.CUSTOMER_SINCE_DATE,
+    B.GEO_NAME,
+    B.REGION_NAME,
+    B.SEGMENT_NAME,
+    B.TERRITORY_MANAGER_NAME,
+    B.CUSTOMER_MANAGER_NAME,
+    B.SALES_ENGINEER_NAME,
+    B.CS_DIVISION_STAMP,
+    B.RENEWAL_DATE,
+    B.INDUSTRY,
+    B.SHIPPING_STREET,
+    B.SHIPPING_CITY,
+    B.SHIPPING_STATE,
+    B.SHIPPING_COUNTRY,
+    B.SHIPPING_COUNTRY_CODE,
+    B.DNB_DUNS_NUMBER,
+    B.ANNUAL_REVENUE,
+    B.NEW_ACCOUNT_OWNER,
+    B.PREVIOUS_ACCOUNT_OWNER,
+    B.OWNER_NAME
+FROM
+                          APTTUS_DW.SF_PRODUCTION."Account_C2" B	                            
+LEFT OUTER JOIN                                  FILTER_ASSETS A
+             ON                  A.ACCOUNTID = B.ACCOUNTID_18__C;                         

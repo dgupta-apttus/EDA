@@ -98,7 +98,7 @@ INSERT
             );
          return_value = "Succeeded.";   // Return a success/error indicator.
          snowflake.execute({
-                    sqlText: `insert into APTTUS_DW.SNAPSHOTS.SNAP_ACTIVITY_LOG (procedure_name, step_name) VALUES (?,?)`
+                    sqlText: `insert into APTTUS_DW.PRODUCT.ACTIVITY_LOG (procedure_name, step_name) VALUES (?,?)`
                     ,binds: [procname, stepname]
                     });         
         }
@@ -106,7 +106,7 @@ INSERT
                 var errorstr = err.message.replace(/\n/g, " ")
                 return_value = "Failed: " + errorstr + " Code: " + err.code + " State: " + err.state;
                 snowflake.execute({
-                    sqlText: `insert into APTTUS_DW.SNAPSHOTS.SNAP_ACTIVITY_LOG VALUES (?,?,?,?,?,?,current_user(),CONVERT_TIMEZONE('UTC',current_timestamp()))`
+                    sqlText: `insert into APTTUS_DW.PRODUCT.ACTIVITY_LOG VALUES (?,?,?,?,?,?,current_user(),CONVERT_TIMEZONE('UTC',current_timestamp()))`
                     ,binds: [procname, stepname, err.code, err.state, errorstr, err.stackTraceTxt]
                     });
             };
@@ -130,4 +130,5 @@ alter task APTTUS_DW.PRODUCT.FILL_SIGN_MONTHLY_ACTIVITY suspend; --resume
 alter task APTTUS_DW.PRODUCT.FILL_SIGN_MONTHLY_ACTIVITY resume;
 
 show tasks IN SCHEMA PRODUCT;
+SHOW procedures IN SCHEMA PRODUCT;
 

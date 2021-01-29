@@ -132,11 +132,15 @@ WITH CONTROL_LAST AS (
              , COALESCE(A.ACTIVITY_COUNT, 0) AS ACT
              , COALESCE(B.PRIOR3_ACTIVITY, 0) AS PRIOR3_ACTIVITY
              , CASE WHEN B.PRIOR3_ACTIVITY > 0
-                 THEN COALESCE((A.ACTIVITY_COUNT-B.PRIOR3_ACTIVITY)/B.PRIOR3_ACTIVITY, 0)
+                 THEN COALESCE((ACT-B.PRIOR3_ACTIVITY)/B.PRIOR3_ACTIVITY, 0)
+                    WHEN ACT > 0
+                 THEN 1   
                 ELSE 0  
                END AS ACTIVITY_P3_INTERVAL
              , CASE WHEN B.PRIOR3_ACTIVITY > 0
                  THEN COALESCE(A.ACTIVITY_COUNT/B.PRIOR3_ACTIVITY, 0)
+                    WHEN A.ACTIVITY_COUNT > 0
+                 THEN 1    
                 ELSE 0  
                END AS ACTIVITY_P3_INTERVAL2
              , CASE
@@ -208,10 +212,14 @@ WITH CONTROL_LAST AS (
              , COALESCE(B.PRIOR3_USERS, 0) AS PRIOR3_USERS
              , CASE WHEN B.PRIOR3_USERS > 0
                  THEN COALESCE((UUSR-B.PRIOR3_USERS)/B.PRIOR3_USERS, 0)
+                    WHEN UUSR > 0
+                 THEN 1   
                 ELSE 0  
                END AS USER_P3_INTERVAL
              , CASE WHEN B.PRIOR3_USERS > 0
                  THEN COALESCE(UUSR/B.PRIOR3_USERS, 0)
+                    WHEN UUSR > 0
+                 THEN 1   
                 ELSE 0  
                END AS USER_P3_INTERVAL2
              , CASE
@@ -314,9 +322,6 @@ WITH CONTROL_LAST AS (
                          AND L.PRODUCT_LINE = P12.PRODUCT_LINE
                          AND L.PACKAGE_ID = P12.PACKAGE_ID                          
         WHERE LAST_ACTIVITY_MONTH >= (SELECT LAST_ACT_LIMIT FROM SET_DATE_RANGE)                  
--- temp
---and L.SOURCE_ORG_ID IN ('00Di0000000HMOLEA4')
---'00D30000001Fe2REAS','00D1D0000009iaNUAQ','00Dd0000000bansEAA','00DA0000000aShTMAU','00DA0000000IsOXMA0','00D6A000002EtECUA0','00DD0000000lCPDMA2','00D0D0000008eVAUAY','00DG0000000irVuMAI','00D2g0000008d4mEAA','00D1F000000A195UAC','00Dd0000000d1nlEAA','00D17000000DNfvEAG','00Dm00000009EUQEA2','00D0C0000008atcUAA','00D300000000LMqEAM','00D9E0000004iVRUAY','00D5I000003egW3UAI','00D28000001z9tdEAA')                                            
 )
         SELECT ORG_SOURCE
              , SOURCE_ORG_ID
@@ -366,8 +371,8 @@ WITH CONTROL_LAST AS (
              , ROUND(PERCENT_SERVICE_EVENTS, 3) as PERCENT_SERVICE_EVENTS
              , TOTAL_MONTHS_OF_ACTIVITY
         FROM JOINS_CALCS   
-        
-        
+     
+;        
         
 -- testing criteria
 --WHERE ACTIVITY_DIRECTION = '+'
