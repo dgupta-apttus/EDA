@@ -1,3 +1,4 @@
+
 create or replace procedure APTTUS_DW.PRODUCT.REPLACE_COMPOSER_MERGE_DETAIL()
     returns string
     language javascript

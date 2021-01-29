@@ -1,3 +1,4 @@
+
 create or replace procedure APTTUS_DW.PRODUCT.FILL_MONTHLY_AA_ACTIVITY_SCORES(MODE VARCHAR)
     returns string
     language javascript
