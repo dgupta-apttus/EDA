@@ -1,4 +1,4 @@
---DROP VIEW APTTUS_DW.PRODUCT."Active_Licenses";
+--DROP VIEW APTTUS_DW.PRODUCT."Active_Licenses"; 
 
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT."Active_Licenses"
 COMMENT = 'Compute fields and windows for further License / Productline processing.  Current view'

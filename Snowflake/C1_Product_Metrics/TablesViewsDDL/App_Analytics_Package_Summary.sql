@@ -79,6 +79,8 @@ WITH unionit AS (
                             AND A.REPORT_MONTH = D."Calendar_Month"
                             AND D."Day" = 1
 ;
-	
+	 
+	 
+	 
 
 	
