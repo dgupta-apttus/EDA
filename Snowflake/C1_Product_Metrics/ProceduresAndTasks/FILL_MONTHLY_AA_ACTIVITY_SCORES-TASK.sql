@@ -113,7 +113,6 @@ WITH CONTROL_LAST AS (
 , CURRENT_ACTIVITY AS (
         SELECT CRM
                 , REPORT_DATE
-                , REPORT_YEAR_MONTH
                 , ORGANIZATION_ID
                 , PACKAGE_ID
                 , MANAGED_PACKAGE_NAMESPACE
