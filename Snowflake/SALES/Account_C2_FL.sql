@@ -4,6 +4,7 @@ CREATE OR REPLACE VIEW APTTUS_DW.SF_PRODUCTION."Account_C2_FL"
 COMMENT = 'Skin on Field Labels (FL) for a few chosen columns, feel free to add more
 created 10/13/20 Greg
           2021/01/12 adding a default NOT FOUND row -- gdw 
+		2021/02/05 - Testing Git -- Naveen
 '
 AS 
 SELECT
