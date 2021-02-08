@@ -1,3 +1,4 @@
+
 create or replace procedure APTTUS_DW.PRODUCT.FILL_MONTHLY_AA_ACTIVITY_SCORES(MODE VARCHAR)
     returns string
     language javascript
@@ -112,7 +113,6 @@ WITH CONTROL_LAST AS (
 , CURRENT_ACTIVITY AS (
         SELECT CRM
                 , REPORT_DATE
-                , REPORT_YEAR_MONTH
                 , ORGANIZATION_ID
                 , PACKAGE_ID
                 , MANAGED_PACKAGE_NAMESPACE
@@ -184,11 +184,15 @@ WITH CONTROL_LAST AS (
              , COALESCE(A.MONTHLY_ACTIVITY, 0) AS ACT
              , COALESCE(B.PRIOR3_ACTIVITY, 0) AS PRIOR3_ACTIVITY
              , CASE WHEN B.PRIOR3_ACTIVITY > 0
-                 THEN COALESCE((A.MONTHLY_ACTIVITY-B.PRIOR3_ACTIVITY)/B.PRIOR3_ACTIVITY, 0)
+                 THEN COALESCE((ACT-B.PRIOR3_ACTIVITY)/B.PRIOR3_ACTIVITY, 0)
+                    WHEN ACT > 0
+                 THEN 1   
                 ELSE 0  
                END AS ACTIVITY_P3_INTERVAL
              , CASE WHEN B.PRIOR3_ACTIVITY > 0
                  THEN COALESCE(A.MONTHLY_ACTIVITY/B.PRIOR3_ACTIVITY, 0)
+                    WHEN A.MONTHLY_ACTIVITY > 0
+                 THEN 1   
                 ELSE 0  
                END AS ACTIVITY_P3_INTERVAL2               
              , CASE
@@ -260,10 +264,14 @@ WITH CONTROL_LAST AS (
              , COALESCE(B.PRIOR3_USERS, 0) AS PRIOR3_USERS
              , CASE WHEN B.PRIOR3_USERS > 0
                  THEN COALESCE((UUSR-B.PRIOR3_USERS)/B.PRIOR3_USERS, 0)
+                    WHEN UUSR > 0
+                 THEN 1   
                 ELSE 0  
                END AS USER_P3_INTERVAL
              , CASE WHEN B.PRIOR3_USERS > 0
                  THEN COALESCE(UUSR/B.PRIOR3_USERS, 0)
+                    WHEN UUSR > 0
+                 THEN 1   
                 ELSE 0  
                END AS USER_P3_INTERVAL2
              , CASE
@@ -354,7 +362,7 @@ WITH CONTROL_LAST AS (
                          ON  L.PACKAGE_ID = P12.PACKAGE_ID
                          AND L.MANAGED_PACKAGE_NAMESPACE = P12.MANAGED_PACKAGE_NAMESPACE
                          AND L.ORGANIZATION_ID = P12.ORGANIZATION_ID                        
-        WHERE L.LAST_ACTIVITY_MONTH >= (SELECT LAST_ACT_LIMIT FROM SET_DATE_RANGE)                                                              
+        WHERE L.LAST_ACTIVITY_MONTH >= (SELECT LAST_ACT_LIMIT FROM SET_DATE_RANGE)                                                           
 )
         SELECT CRM
              , ORGANIZATION_ID  
@@ -474,7 +482,7 @@ CALL APTTUS_DW.PRODUCT.FILL_MONTHLY_AA_ACTIVITY_SCORES('Manual');
 
 CREATE OR REPLACE TASK APTTUS_DW.PRODUCT.FILL_MONTHLY_AA_ACTIVITY_SCORES
   WAREHOUSE = APTTUS_ADMIN
-  SCHEDULE = 'USING CRON 25 16 01 * * UTC' -- 1:01 am UTC time on first day of month
+  SCHEDULE = 'USING CRON 40 04 1 * * America/Los_Angeles' -- 1:01 am UTC time on first day of month
 AS CALL APTTUS_DW.PRODUCT.FILL_MONTHLY_AA_ACTIVITY_SCORES('Full')
 ; 
  

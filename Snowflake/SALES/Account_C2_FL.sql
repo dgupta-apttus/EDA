@@ -1,8 +1,10 @@
 DROP VIEW APTTUS_DW.SF_PRODUCTION."Account_C2_FL";
 
 CREATE OR REPLACE VIEW APTTUS_DW.SF_PRODUCTION."Account_C2_FL"
-COMMENT = 'Skin on Field Labels (FL) for a few chosen column, feel free to add more
+COMMENT = 'Skin on Field Labels (FL) for a few chosen columns, feel free to add more
 created 10/13/20 Greg
+          2021/01/12 adding a default NOT FOUND row -- gdw 
+		2021/02/05 - Testing Git -- Naveen
 '
 AS 
 SELECT
@@ -26,5 +28,20 @@ SELECT
 FROM
 	APTTUS_DW.SF_PRODUCTION."Account_C2"
 WHERE TEST_ACCOUNT_C1 = false 
+UNION
+SELECT
+         'NOT FOUND' as "CRM Source"
+	,'NOT FOUND' AS "Account ID"
+	, 'NOT FOUND' AS "Account Name"
+	, 'NOT FOUND' AS "Account Type"
+	, 'NOT FOUND' AS "Geo"
+	, 'NOT FOUND' AS "Region"
+	, 'NOT FOUND' AS "Segment"
+	, 'NOT FOUND' AS "Establishing Partner"
+	, '2000-02-01' AS "Next Renewal" 
+	, '2030-02-01' AS "Customer Since" 
+	, 'NOT FOUND' AS "Industry"
+	, 'NOT FOUND' AS "SIC4"
+	, 'NOT FOUND' AS "Netsuite ID"
 ;
 

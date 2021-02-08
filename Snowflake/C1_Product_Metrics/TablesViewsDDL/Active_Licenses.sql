@@ -1,6 +1,9 @@
---DROP VIEW APTTUS_DW.PRODUCT."Active_Licenses";
+--DROP VIEW APTTUS_DW.PRODUCT."Active_Licenses"; 
 
 CREATE OR REPLACE VIEW APTTUS_DW.PRODUCT."Active_Licenses"
+-- APTTUS_DW.PRODUCT."Active_Licenses" source
+
+CREATE OR REPLACE VIEW "Active_Licenses"
 COMMENT = 'Compute fields and windows for further License / Productline processing.  Current view'
 AS 
 with recent_MAU_date as ( 
@@ -25,8 +28,9 @@ with recent_MAU_date as (
              , "Subscriber Org ID" AS CUSTOMER_ORG
              , "Package ID" as PACKAGE_ID
              , count(distinct "User ID") AS MONTHLY_UNIQUE_USERS             
-        FROM APTTUS_DW.SF_PRODUCTION.PRODUCT_APPANALYTICS_SUMMARY
+        FROM APTTUS_DW.PRODUCT.APPANALYTICS_SUMMARY
         WHERE "DATE" = (SELECT CURRENT_ACTIVITY_MONTH from recent_MAU_date)
+          AND CRM_SOURCE = 'Apttus1.0'
         GROUP BY "Subscriber Org ID"
                 , "Package ID" 
 )
@@ -115,5 +119,4 @@ WHERE A.STATUS = 'Active'
   and A.IS_SANDBOX = false   
   and A.EXPIRATION_DATE_STRING NOT IN ('UNINSTALLED','EXPIRED')
   and A.ACCOUNT_ID is not null 
-  and A.SELECT1_FOR_PACKAGE_ID = 1 -- this removes Duplicates produced when an org has more than 1 license ID per package_id (rare c1 situation)       
-;  
+  and A.SELECT1_FOR_PACKAGE_ID = 1 -- this removes Duplicates produced when an org has more than 1 license ID per package_id (rare c1 situation);
